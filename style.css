@@ -193,3 +193,87 @@ header nav a:hover {
   margin: 0 auto;
   width: 100%;
 }
+/* Caixa branca centralizada tanto pro login quanto pro painel */
+#login-area, #painel-area {
+  max-width: 500px;
+  margin: 40px auto; /* "auto" nas laterais = centraliza horizontalmente */
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+/* Empilha os campos do formulário, um embaixo do outro, com espaçamento */
+#form-login, #form-noticia {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Estilo padrão dos campos e botões dentro dos formulários */
+#form-login input, #form-noticia input,
+#form-noticia select, #form-noticia textarea,
+#form-login button, #form-noticia button {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+#form-noticia textarea {
+  min-height: 80px; /* deixa as caixas de texto maior um pouco maiores */
+}
+
+/* Deixa os botões de "Entrar" e "Publicar" com a cor de destaque do site */
+#form-login button, #form-noticia button {
+  background-color: #1b3a6b;
+  color: white;
+  border: none;
+  cursor: pointer; /* muda o cursor do mouse pra "mãozinha" ao passar por cima */
+  font-weight: 600;
+}
+
+/* Coloca o título "Painel de Notícias" e o botão "Sair" nas pontas opostas */
+.painel-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.painel-topo button {
+  background-color: #b23b3b; /* vermelho, pra indicar ação de "sair" */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.erro {
+  color: #b23b3b;
+  font-size: 0.9em;
+}
+
+/* Cada linha da lista de notícias no painel */
+.item-lista-noticia {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee; /* uma linha fina separando cada item */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.item-lista-noticia button {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  color: white;
+}
+
+.item-lista-noticia .btn-editar {
+  background-color: #1b3a6b; /* azul = editar */
+}
+
+.item-lista-noticia .btn-excluir {
+  background-color: #b23b3b; /* vermelho = excluir */
+}
