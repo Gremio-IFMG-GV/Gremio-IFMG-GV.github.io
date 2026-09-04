@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Notícias — Espaço IFMG</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- Cabeçalho igual ao resto do site, nada novo aqui -->
+</head>
+<body>
+  <header>
+    <h1>Espaço IFMG</h1>
+    <nav>
+      <a href="index.html">Início</a>
+      <a href="agendamento.html">Agendamento</a>
+      <a href="blog.html">Notícias</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- BLOCO 1: tela de login. Fica visível por padrão -->
+    <section id="login-area">
+      <h2>Painel de Notícias</h2>
+      <form id="form-login">
+        <!-- id="form-login" é como o admin.js vai "achar" esse formulário no código -->
+
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" required>
+        <!-- id="email" é como o admin.js vai pegar o que a pessoa digitou aqui -->
+
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" required>
+        <!-- type="password" faz o navegador esconder os caracteres digitados -->
+
+        <button type="submit">Entrar</button>
+        <!-- type="submit" faz esse botão "disparar" o formulário ao ser clicado -->
+      </form>
+      <p id="erro-login" class="erro"></p>
+      <!-- Começa vazio; o admin.js escreve uma mensagem aqui se o login falhar -->
+    </section>
+
+    <!-- BLOCO 2: painel de verdade. Começa ESCONDIDO (style="display:none") -->
+    <!-- O admin.js troca isso pra visível assim que confirma que você logou -->
+    <section id="painel-area" style="display:none;">
+      <div class="painel-topo">
+        <h2>Painel de Notícias</h2>
+        <button id="btn-sair">Sair</button>
+      </div>
+
+      <!-- Formulário único que serve tanto pra CRIAR quanto EDITAR uma notícia -->
+      <form id="form-noticia">
+        <input type="hidden" id="noticia-id">
+        <!-- type="hidden" = campo invisível pro usuário, mas existe no código.
+             Fica vazio quando é notícia nova; recebe um valor quando você
+             clica em "Editar" numa notícia já existente (explico no admin.js) -->
+
+        <label for="titulo">Título:</label>
+        <input type="text" id="titulo" required>
+
+        <label for="data">Data:</label>
+        <input type="text" id="data" placeholder="ex: 10 de setembro de 2026" required>
+
+        <label for="capa">Link da imagem de capa:</label>
+        <input type="url" id="capa" required>
+        <!-- type="url" faz o navegador conferir se parece um link válido -->
+
+        <label for="resumo">Resumo (aparece na prévia):</label>
+        <textarea id="resumo" required></textarea>
+        <!-- textarea = caixa de texto que permite várias linhas -->
+
+        <label for="tipo">Tipo de conteúdo:</label>
+        <select id="tipo">
+          <!-- select = menu suspenso; cada option é uma opção da lista -->
+          <option value="texto">Só texto</option>
+          <option value="imagem">Texto + imagem</option>
+          <option value="video">Texto + vídeo</option>
+        </select>
+
+        <label for="conteudo">Conteúdo completo (texto, ou link da imagem/vídeo):</label>
+        <textarea id="conteudo" required></textarea>
+
+        <button type="submit" id="btn-salvar">Publicar</button>
+        <!-- O texto desse botão muda pra "Salvar alterações" quando
+             você está editando uma notícia já existente -->
+      </form>
+
+      <h3>Notícias publicadas</h3>
+      <div id="lista-noticias"></div>
+      <!-- Começa vazia; o admin.js preenche isso com a lista de notícias
+           que ele busca no Firestore -->
+    </section>
+  </main>
+
+  <footer>
+    <p>IFMG Campus Governador Valadares</p>
+  </footer>
+
+  <script type="module" src="admin.js"></script>
+  <!-- type="module" é necessário porque o admin.js usa "import" -->
+</body>
+</html>
