@@ -177,3 +177,19 @@ header nav a:hover {
   font-weight: 600;
   text-decoration: none;
 }
+.titulo-pagina {
+  padding: 40px 40px 0 40px;
+}
+
+.noticias-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px 40px 40px 40px;
+}
+
+.noticias-lista .noticia-card {
+  max-width: 700px;
+  margin: 0 auto;
+  width: 100%;
+}
