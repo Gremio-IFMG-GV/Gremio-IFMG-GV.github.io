@@ -167,3 +167,12 @@ async function carregarNoticias() {
     // appendChild "planta" essa div de fato dentro da página
   });
 }
+// Transforma o "criadoEm" (formato técnico do Firebase) numa data legível,
+// tipo "04 de setembro de 2026 às 19:22"
+function formatarData(timestamp) {
+  if (!timestamp) return "publicando...";
+  const data = timestamp.toDate();
+  const dataFormatada = data.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+  const horaFormatada = data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  return `${dataFormatada} às ${horaFormatada}`;
+}
