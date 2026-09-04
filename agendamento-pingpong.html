@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendar Tênis de Mesa — Espaço IFMG</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Espaço IFMG</h1>
+    <nav>
+      <a href="index.html">Início</a>
+      <a href="agendamento.html">Agendamento</a>
+      <a href="blog.html">Blog</a>
+    </nav>
+  </header>
+
+  <main>
+    <p><a href="agendamento.html">&larr; Escolher outra atividade</a></p>
+
+    <div class="item-agendamento">
+      <h3>Tênis de Mesa</h3>
+      <form>
+        <label for="nome-pingpong">Nome:</label>
+        <input type="text" id="nome-pingpong" required>
+
+        <label for="dia-pingpong">Dia:</label>
+        <select id="dia-pingpong">
+          <option>Segunda</option>
+          <option>Terça</option>
+          <option>Quarta</option>
+          <option>Quinta</option>
+        </select>
+
+        <label for="horario-pingpong">Horário:</label>
+        <select id="horario-pingpong">
+          <option>13h-14h</option>
+          <option>14h-15h</option>
+          <option>15h-16h</option>
+        </select>
+
+        <button type="submit">Agendar</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <p>IFMG Campus Governador Valadares</p>
+  </footer>
+</body>
+</html>
