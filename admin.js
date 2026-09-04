@@ -133,9 +133,10 @@ async function carregarNoticias() {
     const item = document.createElement("div");
     item.className = "item-lista-noticia";
     item.innerHTML = `
-      <strong>${noticia.titulo}</strong> — ${noticia.data}
-      <button class="btn-editar">Editar</button>
-      <button class="btn-excluir">Excluir</button>
+  <strong>${noticia.titulo}</strong> — ${formatarData(noticia.criadoEm)}
+  <button class="btn-editar">Editar</button>
+  <button class="btn-excluir">Excluir</button>
+`;
     `;
     // innerHTML monta o conteúdo de dentro dessa div usando os dados da notícia
 
