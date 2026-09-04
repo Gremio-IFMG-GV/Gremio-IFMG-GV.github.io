@@ -101,3 +101,79 @@ header nav a:hover {
   font-size: 0.9em;
   margin-bottom: 8px;
 }
+.hero {
+  padding: 40px;
+  text-align: center;
+}
+
+.noticias-destaque {
+  padding: 0 40px 40px 40px;
+}
+
+.noticias-destaque > h2 {
+  margin-bottom: 20px;
+}
+
+.noticias-grid {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.noticia-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  flex: 1;
+  min-width: 260px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.noticia-card img {
+  width: 100%;
+  display: block;
+}
+
+.noticia-video {
+  background-color: #1b3a6b;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 180px;
+  font-weight: 600;
+}
+
+.noticia-card h3,
+.noticia-card p,
+.noticia-card .noticia-data {
+  padding: 0 20px;
+}
+
+.noticia-data {
+  display: block;
+  margin-top: 16px;
+  color: #888;
+  font-size: 0.85em;
+}
+
+.noticia-card h3 {
+  margin-top: 6px;
+}
+
+.noticia-card p {
+  margin-bottom: 20px;
+}
+
+.ver-todas {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.ver-todas a {
+  color: #1b3a6b;
+  font-weight: 600;
+  text-decoration: none;
+}
