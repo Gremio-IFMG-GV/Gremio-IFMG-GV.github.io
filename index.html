@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Espaço IFMG</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
@@ -12,34 +13,44 @@
     <nav>
       <a href="index.html">Início</a>
       <a href="agendamento.html">Agendamento</a>
-      <a href="blog.html">Blog</a>
+      <a href="blog.html">Notícias</a>
     </nav>
   </header>
 
   <main>
     <section class="hero">
       <h2>Bem-vindo ao Espaço de Convivência</h2>
-      <p>Reserve a mesa de sinuca, o tabuleiro de xadrez ou a mesa de ping-pong para os horários disponíveis.</p>
+      <p>Acompanhe as novidades do espaço e agende seu horário de sinuca, xadrez ou tênis de mesa.</p>
     </section>
 
-    <section class="itens">
-      <article class="item-card">
-        <h3>Mesa de Sinuca</h3>
-        <p>Disponível das 13h às 16h, de segunda a quinta.</p>
-        <a href="agendamento.html">Agendar</a>
-      </article>
+    <section class="noticias-destaque">
+      <h2>Últimas notícias</h2>
 
-      <article class="item-card">
-        <h3>Tabuleiro de Xadrez</h3>
-        <p>Disponível das 13h às 16h, de segunda a quinta.</p>
-        <a href="agendamento.html">Agendar</a>
-      </article>
+      <div class="noticias-grid">
 
-      <article class="item-card">
-        <h3>Tênis de Mesa</h3>
-        <p>Mesa, raquetes e bolas disponíveis das 13h às 16h, de segunda a quinta.</p>
-        <a href="agendamento.html">Agendar</a>
-      </article>
+        <article class="noticia-card">
+          <span class="noticia-data">04 de setembro de 2026</span>
+          <h3>Espaço inaugurado!</h3>
+          <p>O espaço de convivência já está disponível para agendamento. Confira os horários e reserve seu momento de sinuca, xadrez ou ping-pong.</p>
+        </article>
+
+        <article class="noticia-card">
+          <img src="https://via.placeholder.com/400x220" alt="Foto da mesa de sinuca nova">
+          <span class="noticia-data">05 de setembro de 2026</span>
+          <h3>Mesa de sinuca nova chegou</h3>
+          <p>Trocamos o feltro e os tacos da mesa de sinuca. Confira como ficou o novo visual.</p>
+        </article>
+
+        <article class="noticia-card">
+          <div class="noticia-video">Vídeo aqui</div>
+          <span class="noticia-data">06 de setembro de 2026</span>
+          <h3>Torneio de xadrez: veja os melhores momentos</h3>
+          <p>Um resumo em vídeo do último torneio realizado no espaço.</p>
+        </article>
+
+      </div>
+
+      <p class="ver-todas"><a href="blog.html">Ver todas as notícias &rarr;</a></p>
     </section>
   </main>
 
