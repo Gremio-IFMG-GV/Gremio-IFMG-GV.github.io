@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blog — Espaço IFMG</title>
- <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Notícias — Espaço IFMG</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
@@ -12,18 +13,37 @@
     <nav>
       <a href="index.html">Início</a>
       <a href="agendamento.html">Agendamento</a>
-      <a href="blog.html">Blog</a>
+      <a href="blog.html">Notícias</a>
     </nav>
   </header>
 
   <main>
-    <h2>Blog</h2>
+    <h2 class="titulo-pagina">Notícias</h2>
 
-    <article class="post">
-      <h3>Espaço inaugurado!</h3>
-      <p class="data">04 de setembro de 2026</p>
-      <p>O espaço de convivência já está disponível para agendamento. Confira os horários e reserve seu momento de sinuca, xadrez ou ping-pong.</p>
-    </article>
+    <div class="noticias-lista">
+
+      <article class="noticia-card">
+        <img src="https://via.placeholder.com/400x220" alt="Inauguração do espaço">
+        <span class="noticia-data">04 de setembro de 2026</span>
+        <h3>Espaço inaugurado!</h3>
+        <p>O espaço de convivência já está disponível para agendamento. Confira os horários e reserve seu momento de sinuca, xadrez ou ping-pong.</p>
+      </article>
+
+      <article class="noticia-card">
+        <img src="https://via.placeholder.com/400x220" alt="Foto da mesa de sinuca nova">
+        <span class="noticia-data">05 de setembro de 2026</span>
+        <h3>Mesa de sinuca nova chegou</h3>
+        <p>Trocamos o feltro e os tacos da mesa de sinuca. Confira como ficou o novo visual.</p>
+      </article>
+
+      <article class="noticia-card">
+        <img src="https://via.placeholder.com/400x220" alt="Torneio de xadrez">
+        <span class="noticia-data">06 de setembro de 2026</span>
+        <h3>Torneio de xadrez: veja os melhores momentos</h3>
+        <p>Um resumo em vídeo do último torneio realizado no espaço.</p>
+      </article>
+
+    </div>
   </main>
 
   <footer>
