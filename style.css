@@ -1,1 +1,104 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
+body {
+  font-family: 'Poppins', sans-serif;
+  color: #222;
+  background-color: #f7f7f7;
+  line-height: 1.6;
+}
+
+header {
+  background-color: #1b3a6b;
+  color: white;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 24px;
+  font-weight: 600;
+}
+
+header nav a:hover {
+  text-decoration: underline;
+}
+
+.hero {
+  padding: 40px;
+}
+
+.itens {
+  display: flex;
+  gap: 24px;
+  padding: 0 40px 40px 40px;
+  flex-wrap: wrap;
+}
+
+.item-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  flex: 1;
+  min-width: 240px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.item-card a {
+  display: inline-block;
+  margin-top: 12px;
+  background-color: #1b3a6b;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.item-agendamento {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin: 0 40px 24px 40px;
+}
+
+.item-agendamento form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 300px;
+}
+
+.item-agendamento input,
+.item-agendamento select,
+.item-agendamento button {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.item-agendamento button {
+  background-color: #1b3a6b;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.post {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin: 24px 40px;
+}
+
+.post .data {
+  color: #888;
+  font-size: 0.9em;
+  margin-bottom: 8px;
+}
