@@ -6,7 +6,7 @@ import {
 emailjs.init("Y2p4-JQhyVwsirKI7");
 
 const EMAILS_DESTINO = [
-  "0117389@academico.ifmg.edu.br"
+  "seuemail@exemplo.com"
 ];
 
 const form = document.querySelector("form[data-atividade]");
@@ -28,4 +28,43 @@ form.addEventListener("submit", async (e) => {
 
   const q = query(
     collection(db, "agendamentos"),
-    where("atividade",
+    where("atividade", "==", atividade),
+    where("dia", "==", dia),
+    where("horario", "==", horario)
+  );
+  const jaExiste = await getDocs(q);
+
+  if (!jaExiste.empty) {
+    alert("Esse horário já está reservado. Escolha outro dia ou horário.");
+    return;
+  }
+
+  await addDoc(collection(db, "agendamentos"), {
+    nome: nome,
+    ano: ano,
+    curso: curso,
+    dia: dia,
+    horario: horario,
+    atividade: atividade,
+    criadoEm: serverTimestamp()
+  });
+
+  EMAILS_DESTINO.forEach(function (email) {
+    emailjs.send("service_irheu35", "template_war4di4", {
+      to_email: email,
+      nome: nome,
+      ano: ano,
+      curso: curso,
+      atividade: atividade,
+      dia: dia,
+      horario: horario
+    });
+  });
+
+  alert("Agendamento realizado com sucesso!");
+  form.reset();
+  document.getElementById("data-selecionada").value = "";
+  document.querySelectorAll(".dia-selecionado").forEach(function (el) {
+    el.classList.remove("dia-selecionado");
+  });
+});
