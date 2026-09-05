@@ -487,3 +487,34 @@ header nav a:hover {
   box-shadow: 0 0 8px rgba(255, 233, 168, 0.4);
   color: #a3781a;
 }
+/* Centraliza o cartão de agendamento e deixa a largura do tamanho do conteúdo,
+   em vez de esticar pela tela toda */
+.item-agendamento {
+  max-width: 420px;
+  margin: 0 auto 24px auto;
+}
+
+.item-agendamento form {
+  max-width: 100%;
+}
+
+/* Mais espaço entre o botão "voltar" e o resto do formulário */
+.item-agendamento > p:first-child {
+  margin-bottom: 16px;
+}
+
+/* Ajustes específicos pra celular: botão menor e mais respiro antes do calendário */
+@media (max-width: 600px) {
+  .botao-suave {
+    padding: 6px 14px;
+    font-size: 0.9em;
+  }
+
+  #calendario {
+    margin-top: 10px;
+  }
+
+  .item-agendamento label {
+    margin-top: 4px;
+  }
+}
