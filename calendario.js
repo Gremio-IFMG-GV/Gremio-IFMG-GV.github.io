@@ -1,15 +1,14 @@
 // Monta o calendário de um mês específico (por padrão, o mês atual)
 function montarCalendario(mesReferencia = new Date()) {
   const container = document.getElementById("calendario");
-  container.innerHTML = ""; // limpa o que tinha antes (ao trocar de mês)
+  container.innerHTML = "";
 
   const ano = mesReferencia.getFullYear();
-  const mes = mesReferencia.getMonth(); // 0 = janeiro ... 11 = dezembro
+  const mes = mesReferencia.getMonth();
 
   const nomesMes = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho",
                      "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 
-  // Cabeçalho: setinha voltar, nome do mês/ano, setinha avançar
   const cabecalho = document.createElement("div");
   cabecalho.className = "calendario-cabecalho";
   cabecalho.innerHTML = `
@@ -19,7 +18,6 @@ function montarCalendario(mesReferencia = new Date()) {
   `;
   container.appendChild(cabecalho);
 
-  // Linha com as abreviações dos dias da semana (Dom, Seg, Ter...)
   const diasSemana = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
   const linhaDias = document.createElement("div");
   linhaDias.className = "calendario-dias-semana";
@@ -30,34 +28,37 @@ function montarCalendario(mesReferencia = new Date()) {
   });
   container.appendChild(linhaDias);
 
-  // A grade com os números dos dias em si
   const grade = document.createElement("div");
   grade.className = "calendario-grade";
 
-  const primeiroDiaDoMes = new Date(ano, mes, 1).getDay(); // em que dia da semana cai o dia 1
-  const totalDiasNoMes = new Date(ano, mes + 1, 0).getDate(); // quantos dias tem esse mês
+  const primeiroDiaDoMes = new Date(ano, mes, 1).getDay();
+  const totalDiasNoMes = new Date(ano, mes + 1, 0).getDate();
 
-  // Espaços vazios antes do dia 1, só pra alinhar embaixo do dia da semana certo
   for (let i = 0; i < primeiroDiaDoMes; i++) {
     grade.appendChild(document.createElement("span"));
   }
 
   const hoje = new Date();
-  hoje.setHours(0, 0, 0, 0); // zera a hora, pra comparar só a data
+  hoje.setHours(0, 0, 0, 0);
+
+  // NOVO: data limite = hoje + 30 dias. Nada depois disso pode ser selecionado.
+  const limite = new Date(hoje);
+  limite.setDate(limite.getDate() + 30);
 
   for (let dia = 1; dia <= totalDiasNoMes; dia++) {
     const dataDoDia = new Date(ano, mes, dia);
-    const diaDaSemana = dataDoDia.getDay(); // 0=dom, 1=seg, 2=ter, 3=qua, 4=qui, 5=sex, 6=sáb
+    const diaDaSemana = dataDoDia.getDay();
 
     const celula = document.createElement("button");
     celula.type = "button";
     celula.textContent = dia;
     celula.className = "dia-calendario";
 
-    const ehDiaUtil = diaDaSemana >= 1 && diaDaSemana <= 4; // só segunda a quinta
-    const jaPassou = dataDoDia < hoje; // não deixa marcar dia que já passou
+    const ehDiaUtil = diaDaSemana >= 1 && diaDaSemana <= 4;
+    const jaPassou = dataDoDia < hoje;
+    const passouDoLimite = dataDoDia > limite; // NOVO
 
-    if (!ehDiaUtil || jaPassou) {
+    if (!ehDiaUtil || jaPassou || passouDoLimite) {
       celula.disabled = true;
       celula.classList.add("dia-desabilitado");
     } else {
@@ -78,14 +79,22 @@ function montarCalendario(mesReferencia = new Date()) {
 
   container.appendChild(grade);
 
-  // Liga as setinhas de navegação a trocar de mês (chamando a função de novo)
   document.getElementById("mes-anterior").addEventListener("click", function () {
     montarCalendario(new Date(ano, mes - 1, 1));
   });
-  document.getElementById("mes-seguinte").addEventListener("click", function () {
-    montarCalendario(new Date(ano, mes + 1, 1));
-  });
+
+  const btnSeguinte = document.getElementById("mes-seguinte");
+  // NOVO: se o primeiro dia do PRÓXIMO mês já passar do limite de 30 dias,
+  // desabilita a setinha de avançar (não adianta mostrar um mês todo bloqueado)
+  const primeiroDiaProximoMes = new Date(ano, mes + 1, 1);
+  if (primeiroDiaProximoMes > limite) {
+    btnSeguinte.disabled = true;
+    btnSeguinte.classList.add("dia-desabilitado");
+  } else {
+    btnSeguinte.addEventListener("click", function () {
+      montarCalendario(new Date(ano, mes + 1, 1));
+    });
+  }
 }
 
-// Roda assim que a página carrega, mostrando o mês atual
 montarCalendario();
