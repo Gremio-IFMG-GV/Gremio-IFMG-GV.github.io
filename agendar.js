@@ -3,9 +3,18 @@ import {
   collection, addDoc, getDocs, query, where, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
-// Pega o formulário que tenha o atributo data-atividade (definido em cada página)
+// Inicia o EmailJS com sua chave pública
+emailjs.init("Y2p4-JQhyVwsirKI7");
+
+// Lista de e-mails que recebem a notificação de cada agendamento.
+// Pra adicionar mais, é só colocar entre aspas, separado por vírgula:
+// ["email1@exemplo.com", "email2@exemplo.com"]
+const EMAILS_DESTINO = [
+  "seuemail@exemplo.com"
+];
+
 const form = document.querySelector("form[data-atividade]");
-const atividade = form.dataset.atividade; // "sinuca", "xadrez" ou "pingpong"
+const atividade = form.dataset.atividade;
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -21,7 +30,6 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
-  // Verifica se já existe alguém agendado nesse mesmo dia + horário + atividade
   const q = query(
     collection(db, "agendamentos"),
     where("atividade", "==", atividade),
@@ -35,14 +43,15 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
-  // Cria o agendamento de verdade no banco de dados
   await addDoc(collection(db, "agendamentos"), {
     nome, ano, curso, dia, horario, atividade,
     criadoEm: serverTimestamp()
   });
 
-  alert("Agendamento realizado com sucesso!");
-  form.reset();
-  document.getElementById("data-selecionada").value = "";
-  document.querySelectorAll(".dia-selecionado").forEach((el) => el.classList.remove("dia-selecionado"));
-});
+  // Manda um e-mail de notificação pra cada endereço da lista
+  EMAILS_DESTINO.forEach(function (email) {
+    emailjs.send("service_irheu35", "template_war4di4", {
+      to_email: email,
+      nome: nome,
+      ano: ano,
+      curso: curso,
