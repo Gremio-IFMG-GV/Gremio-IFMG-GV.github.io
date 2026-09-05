@@ -7,8 +7,47 @@ const selectHorario = form.querySelector("[name=horario]");
 
 const TODOS_HORARIOS = ["13h-14h", "14h-15h", "15h-16h"];
 
-// Guarda os horários já reservados por dia dessa atividade,
-// tipo: { "09/09/2026": ["13h-14h", "14h-15h"] }
+// Feriados nacionais fixos + feriados de Governador Valadares (2026).
+// Pra adicionar um feriado móvel (Carnaval, Sexta-feira Santa, Corpus Christi)
+// ou um recesso do IFMG, é só acrescentar uma linha nova, no formato "dd/mm/aaaa".
+const FERIADOS = [
+  "01/01/2026", // Confraternização Universal
+  "30/01/2026", // Aniversário de Governador Valadares
+  "21/04/2026", // Tiradentes
+  "01/05/2026", // Dia do Trabalho
+  "13/06/2026", // Padroeiro de Governador Valadares (Santo Antônio)
+  "07/09/2026", // Independência do Brasil
+  "12/10/2026", // Nossa Senhora Aparecida
+  "02/11/2026", // Finados
+  "15/11/2026", // Proclamação da República
+  "20/11/2026", // Consciência Negra
+  "25/12/2026"  // Natal
+];
+
+// Transforma "dd/mm/aaaa" num objeto Date de verdade
+function paraData(dataTexto) {
+  const [dia, mes, ano] = dataTexto.split("/").map(Number);
+  return new Date(ano, mes - 1, dia);
+}
+
+// Transforma um objeto Date de volta pra "dd/mm/aaaa"
+function paraTexto(data) {
+  return String(data.getDate()).padStart(2, "0") + "/" +
+         String(data.getMonth() + 1).padStart(2, "0") + "/" +
+         data.getFullYear();
+}
+
+// NOVO: pra cada feriado que cai numa terça-feira (getDay() === 2),
+// adiciona a segunda-feira anterior numa lista extra de dias bloqueados
+const SEGUNDAS_APOS_FERIADO_TERCA = FERIADOS
+  .map(paraData)
+  .filter(function (data) { return data.getDay() === 2; })
+  .map(function (data) {
+    const segunda = new Date(data);
+    segunda.setDate(segunda.getDate() - 1);
+    return paraTexto(segunda);
+  });
+
 let reservasPorDia = {};
 
 async function carregarReservas() {
@@ -79,18 +118,18 @@ function montarCalendario(mesReferencia = new Date()) {
     celula.textContent = dia;
     celula.className = "dia-calendario";
 
-    const dataFormatada = String(dia).padStart(2, "0") + "/" +
-                           String(mes + 1).padStart(2, "0") + "/" + ano;
+    const dataFormatada = paraTexto(dataDoDia);
 
     const ehDiaUtil = diaDaSemana >= 1 && diaDaSemana <= 4;
     const jaPassou = dataDoDia < hoje;
     const passouDoLimite = dataDoDia > limite;
+    const ehFeriado = FERIADOS.includes(dataFormatada);
+    const ehSegundaAposFeriadoTerca = SEGUNDAS_APOS_FERIADO_TERCA.includes(dataFormatada); // NOVO
 
-    // NOVO: dia "completo" = os 3 horários dessa atividade já estão reservados nesse dia
     const horariosDoDia = reservasPorDia[dataFormatada] || [];
     const diaCompleto = horariosDoDia.length >= TODOS_HORARIOS.length;
 
-    if (!ehDiaUtil || jaPassou || passouDoLimite || diaCompleto) {
+    if (!ehDiaUtil || jaPassou || passouDoLimite || diaCompleto || ehFeriado || ehSegundaAposFeriadoTerca) {
       celula.disabled = true;
       celula.classList.add("dia-desabilitado");
     } else {
@@ -126,7 +165,6 @@ function montarCalendario(mesReferencia = new Date()) {
   }
 }
 
-// NOVO: desabilita, no menu de horário, as opções já reservadas no dia escolhido
 function atualizarHorariosDisponiveis(dataFormatada) {
   const horariosOcupados = reservasPorDia[dataFormatada] || [];
 
@@ -145,8 +183,6 @@ function atualizarHorariosDisponiveis(dataFormatada) {
   }
 }
 
-// Busca as reservas PRIMEIRO, e só depois desenha o calendário —
-// assim os dias já completos já aparecem travados desde o início
 carregarReservas().then(function () {
   montarCalendario();
 });
