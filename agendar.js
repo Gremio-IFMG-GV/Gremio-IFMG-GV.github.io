@@ -1,6 +1,6 @@
 import { db } from "./firebase-config.js";
 import {
-  collection, addDoc, getDocs, query, where, serverTimestamp
+  collection, addDoc, getDocs, query, where, serverTimestamp, Timestamp
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
 emailjs.init("Y2p4-JQhyVwsirKI7");
@@ -11,6 +11,13 @@ const EMAILS_DESTINO = [
 
 const form = document.querySelector("form[data-atividade]");
 const atividade = form.dataset.atividade;
+
+// NOVO: calcula o momento exato (dia + hora final) em que o agendamento vence
+function calcularExpiraEm(diaTexto, horarioTexto) {
+  const [dia, mes, ano] = diaTexto.split("/").map(Number);
+  const horaFim = parseInt(horarioTexto.split("-")[1], 10); // "13h-14h" -> pega o "14h" -> 14
+  return new Date(ano, mes - 1, dia, horaFim, 0, 0);
+}
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -46,7 +53,8 @@ form.addEventListener("submit", async (e) => {
     dia: dia,
     horario: horario,
     atividade: atividade,
-    criadoEm: serverTimestamp()
+    criadoEm: serverTimestamp(),
+    expiraEm: Timestamp.fromDate(calcularExpiraEm(dia, horario)) // NOVO
   });
 
   EMAILS_DESTINO.forEach(function (email) {
