@@ -520,4 +520,8 @@ header nav a:hover {
   .item-agendamento label {
     margin-top: 4px;
   }
+
+  .item-agendamento {
+    margin-top: 24px;
+  }
 }
