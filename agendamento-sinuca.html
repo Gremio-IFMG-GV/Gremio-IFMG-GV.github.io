@@ -22,16 +22,30 @@
 
     <div class="item-agendamento">
       <h3>Mesa de Sinuca</h3>
-      <form>
+      <form data-atividade="sinuca">
         <label for="nome-sinuca">Nome:</label>
-        <input type="text" id="nome-sinuca" required>
+        <input type="text" id="nome-sinuca" name="nome" required>
+
+        <label for="ano-sinuca">Ano:</label>
+        <select id="ano-sinuca" name="ano">
+          <option value="1">1º ano</option>
+          <option value="2">2º ano</option>
+          <option value="3">3º ano</option>
+        </select>
+
+        <label for="curso-sinuca">Curso:</label>
+        <select id="curso-sinuca" name="curso">
+          <option value="TMA">TMA</option>
+          <option value="TED">TED</option>
+          <option value="TST">TST</option>
+        </select>
 
         <label>Escolha o dia:</label>
         <div id="calendario"></div>
         <input type="hidden" id="data-selecionada" required>
 
         <label for="horario-sinuca">Horário:</label>
-        <select id="horario-sinuca">
+        <select id="horario-sinuca" name="horario">
           <option>13h-14h</option>
           <option>14h-15h</option>
           <option>15h-16h</option>
@@ -47,5 +61,6 @@
   </footer>
 
   <script src="calendario.js"></script>
+  <script type="module" src="agendar.js"></script>
 </body>
 </html>
