@@ -10,7 +10,7 @@ emailjs.init("Y2p4-JQhyVwsirKI7");
 // Pra adicionar mais, é só colocar entre aspas, separado por vírgula:
 // ["email1@exemplo.com", "email2@exemplo.com"]
 const EMAILS_DESTINO = [
-  "seuemail@exemplo.com"
+  "0117389@academico.ifmg.edu.br"
 ];
 
 const form = document.querySelector("form[data-atividade]");
