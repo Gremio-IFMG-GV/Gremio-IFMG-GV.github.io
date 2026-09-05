@@ -131,6 +131,10 @@ header nav a:hover {
   flex-direction: column;
 }
 
+.noticias-grid .noticia-card {
+  max-width: 380px;
+}
+
 .noticia-card img {
   width: 100%;
   display: block;
@@ -408,4 +412,21 @@ header nav a:hover {
   header nav {
     justify-content: center;
   }
+}
+.botao-voltar {
+  display: inline-block;
+  padding: 8px 18px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #1b3a6b;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: background-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+}
+
+.botao-voltar:hover {
+  background-color: #fff8e6;
+  box-shadow: 0 0 14px rgba(255, 233, 168, 0.7);
+  color: #a3781a;
 }
