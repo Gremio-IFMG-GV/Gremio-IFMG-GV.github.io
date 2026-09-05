@@ -352,3 +352,9 @@ header nav a:hover {
   background-color: #1b3a6b !important;
   color: white;
 }
+.noticia-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
