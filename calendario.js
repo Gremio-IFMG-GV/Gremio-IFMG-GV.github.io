@@ -1,4 +1,30 @@
-// Monta o calendário de um mês específico (por padrão, o mês atual)
+import { db } from "./firebase-config.js";
+import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+const form = document.querySelector("form[data-atividade]");
+const atividade = form.dataset.atividade;
+const selectHorario = form.querySelector("[name=horario]");
+
+const TODOS_HORARIOS = ["13h-14h", "14h-15h", "15h-16h"];
+
+// Guarda os horários já reservados por dia dessa atividade,
+// tipo: { "09/09/2026": ["13h-14h", "14h-15h"] }
+let reservasPorDia = {};
+
+async function carregarReservas() {
+  const q = query(collection(db, "agendamentos"), where("atividade", "==", atividade));
+  const resultado = await getDocs(q);
+
+  reservasPorDia = {};
+  resultado.forEach((docSnap) => {
+    const dados = docSnap.data();
+    if (!reservasPorDia[dados.dia]) {
+      reservasPorDia[dados.dia] = [];
+    }
+    reservasPorDia[dados.dia].push(dados.horario);
+  });
+}
+
 function montarCalendario(mesReferencia = new Date()) {
   const container = document.getElementById("calendario");
   container.innerHTML = "";
@@ -41,7 +67,6 @@ function montarCalendario(mesReferencia = new Date()) {
   const hoje = new Date();
   hoje.setHours(0, 0, 0, 0);
 
-  // NOVO: data limite = hoje + 30 dias. Nada depois disso pode ser selecionado.
   const limite = new Date(hoje);
   limite.setDate(limite.getDate() + 30);
 
@@ -54,11 +79,18 @@ function montarCalendario(mesReferencia = new Date()) {
     celula.textContent = dia;
     celula.className = "dia-calendario";
 
+    const dataFormatada = String(dia).padStart(2, "0") + "/" +
+                           String(mes + 1).padStart(2, "0") + "/" + ano;
+
     const ehDiaUtil = diaDaSemana >= 1 && diaDaSemana <= 4;
     const jaPassou = dataDoDia < hoje;
-    const passouDoLimite = dataDoDia > limite; // NOVO
+    const passouDoLimite = dataDoDia > limite;
 
-    if (!ehDiaUtil || jaPassou || passouDoLimite) {
+    // NOVO: dia "completo" = os 3 horários dessa atividade já estão reservados nesse dia
+    const horariosDoDia = reservasPorDia[dataFormatada] || [];
+    const diaCompleto = horariosDoDia.length >= TODOS_HORARIOS.length;
+
+    if (!ehDiaUtil || jaPassou || passouDoLimite || diaCompleto) {
       celula.disabled = true;
       celula.classList.add("dia-desabilitado");
     } else {
@@ -67,10 +99,9 @@ function montarCalendario(mesReferencia = new Date()) {
           el.classList.remove("dia-selecionado");
         });
         celula.classList.add("dia-selecionado");
-
-        const dataFormatada = String(dia).padStart(2, "0") + "/" +
-                               String(mes + 1).padStart(2, "0") + "/" + ano;
         document.getElementById("data-selecionada").value = dataFormatada;
+
+        atualizarHorariosDisponiveis(dataFormatada);
       });
     }
 
@@ -84,8 +115,6 @@ function montarCalendario(mesReferencia = new Date()) {
   });
 
   const btnSeguinte = document.getElementById("mes-seguinte");
-  // NOVO: se o primeiro dia do PRÓXIMO mês já passar do limite de 30 dias,
-  // desabilita a setinha de avançar (não adianta mostrar um mês todo bloqueado)
   const primeiroDiaProximoMes = new Date(ano, mes + 1, 1);
   if (primeiroDiaProximoMes > limite) {
     btnSeguinte.disabled = true;
@@ -97,4 +126,27 @@ function montarCalendario(mesReferencia = new Date()) {
   }
 }
 
-montarCalendario();
+// NOVO: desabilita, no menu de horário, as opções já reservadas no dia escolhido
+function atualizarHorariosDisponiveis(dataFormatada) {
+  const horariosOcupados = reservasPorDia[dataFormatada] || [];
+
+  Array.from(selectHorario.options).forEach(function (opcao) {
+    opcao.disabled = horariosOcupados.includes(opcao.value || opcao.textContent);
+  });
+
+  const selecionadaOcupada = selectHorario.selectedOptions[0] && selectHorario.selectedOptions[0].disabled;
+  if (selecionadaOcupada) {
+    const primeiraLivre = Array.from(selectHorario.options).find(function (o) {
+      return !o.disabled;
+    });
+    if (primeiraLivre) {
+      selectHorario.value = primeiraLivre.value || primeiraLivre.textContent;
+    }
+  }
+}
+
+// Busca as reservas PRIMEIRO, e só depois desenha o calendário —
+// assim os dias já completos já aparecem travados desde o início
+carregarReservas().then(function () {
+  montarCalendario();
+});
