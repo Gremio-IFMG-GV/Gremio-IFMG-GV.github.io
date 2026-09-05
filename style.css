@@ -277,3 +277,78 @@ header nav a:hover {
 .item-lista-noticia .btn-excluir {
   background-color: #b23b3b; /* vermelho = excluir */
 }
+.noticia-card a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+#noticia-conteudo {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+}
+
+.noticia-midia {
+  width: 100%;
+  border-radius: 12px;
+  margin: 16px 0;
+}
+#calendario .calendario-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+#calendario .calendario-cabecalho button {
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
+  color: #1b3a6b;
+  padding: 0;
+}
+
+#calendario .calendario-dias-semana {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 0.85em;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+#calendario .calendario-grade {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+#calendario .dia-calendario {
+  padding: 8px 0;
+  border: none;
+  border-radius: 6px;
+  background-color: #eef1f6;
+  color: #222;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#calendario .dia-calendario:hover:not(.dia-desabilitado) {
+  background-color: #d7e0ef;
+}
+
+#calendario .dia-desabilitado {
+  background: none;
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+#calendario .dia-selecionado {
+  background-color: #1b3a6b !important;
+  color: white;
+}
