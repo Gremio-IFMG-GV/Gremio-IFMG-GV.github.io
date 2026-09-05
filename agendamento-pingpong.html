@@ -8,6 +8,9 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<script src="calendario.js"></script>
+  
   <header>
     <h1>Espaço IFMG</h1>
     <nav>
@@ -26,13 +29,9 @@
         <label for="nome-pingpong">Nome:</label>
         <input type="text" id="nome-pingpong" required>
 
-        <label for="dia-pingpong">Dia:</label>
-        <select id="dia-pingpong">
-          <option>Segunda</option>
-          <option>Terça</option>
-          <option>Quarta</option>
-          <option>Quinta</option>
-        </select>
+      <label>Escolha o dia:</label>
+<div id="calendario"></div>
+<input type="hidden" id="data-selecionada" required>
 
         <label for="horario-pingpong">Horário:</label>
         <select id="horario-pingpong">
