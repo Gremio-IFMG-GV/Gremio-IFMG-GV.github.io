@@ -6,7 +6,7 @@ import {
 emailjs.init("Y2p4-JQhyVwsirKI7");
 
 const EMAILS_DESTINO = [
-  "seuemail@exemplo.com"
+  "0117389@academico.ifmg.edu.br"
 ];
 
 const form = document.querySelector("form[data-atividade]");
