@@ -5,6 +5,9 @@ import {
 
 emailjs.init("Y2p4-JQhyVwsirKI7");
 
+// Lista de e-mails que recebem a notificação de cada agendamento.
+// Pra adicionar mais, é só colocar entre aspas, separado por vírgula:
+// ["email1@exemplo.com", "email2@exemplo.com"]
 const EMAILS_DESTINO = [
   "0117389@academico.ifmg.edu.br"
 ];
@@ -12,7 +15,8 @@ const EMAILS_DESTINO = [
 const form = document.querySelector("form[data-atividade]");
 const atividade = form.dataset.atividade;
 
-// NOVO: calcula o momento exato (dia + hora final) em que o agendamento vence
+// Calcula o momento exato (dia + hora final) em que o agendamento vence,
+// usado pelo Firestore TTL pra apagar automaticamente depois
 function calcularExpiraEm(diaTexto, horarioTexto) {
   const [dia, mes, ano] = diaTexto.split("/").map(Number);
   const horaFim = parseInt(horarioTexto.split("-")[1], 10); // "13h-14h" -> pega o "14h" -> 14
@@ -54,7 +58,7 @@ form.addEventListener("submit", async (e) => {
     horario: horario,
     atividade: atividade,
     criadoEm: serverTimestamp(),
-    expiraEm: Timestamp.fromDate(calcularExpiraEm(dia, horario)) // NOVO
+    expiraEm: Timestamp.fromDate(calcularExpiraEm(dia, horario))
   });
 
   EMAILS_DESTINO.forEach(function (email) {
