@@ -1,7 +1,6 @@
 import { db } from "./firebase-config.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
-// Pega o "id" que vem no final do link, tipo noticia.html?id=ABC123
 const parametros = new URLSearchParams(window.location.search);
 const id = parametros.get("id");
 
@@ -23,19 +22,14 @@ async function carregarNoticia() {
 
   const noticia = snap.data();
 
-  let midia = "";
-  if (noticia.tipo === "imagem") {
-    midia = `<img src="${noticia.conteudo}" alt="${noticia.titulo}" class="noticia-midia">`;
-  } else if (noticia.tipo === "video") {
-    midia = `<div class="noticia-midia noticia-video-completo">${noticia.conteudo}</div>`;
-  }
-
+  // O campo "conteudo" já vem pronto (texto + imagens + vídeos misturados),
+  // então só precisamos inserir ele como HTML de verdade
   container.innerHTML = `
     <h2>${noticia.titulo}</h2>
     <span class="noticia-data">${formatarData(noticia.criadoEm)}</span>
-    ${midia}
-    <p>${noticia.resumo}</p>
-    ${noticia.tipo === "texto" ? `<p>${noticia.conteudo}</p>` : ""}
+    <img src="${noticia.capa}" alt="${noticia.titulo}" class="noticia-midia">
+    <p class="resumo-destaque">${noticia.resumo}</p>
+    <div class="conteudo-rico">${noticia.conteudo}</div>
   `;
 }
 
