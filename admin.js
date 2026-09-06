@@ -7,11 +7,9 @@ import {
   signInWithEmailAndPassword, onAuthStateChanged, signOut
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
-// Dados do Cloudinary (upload de imagem sem precisar de servidor próprio)
 const CLOUDINARY_CLOUD_NAME = "bkwfwviq";
 const CLOUDINARY_UPLOAD_PRESET = "Site-IFMG";
 
-// --- Elementos da tela ---
 const loginArea = document.getElementById("login-area");
 const menuArea = document.getElementById("menu-area");
 const criarArea = document.getElementById("criar-area");
@@ -38,13 +36,12 @@ const editorConteudo = document.getElementById("editor-conteudo");
 const btnInserirImagem = document.getElementById("btn-inserir-imagem");
 const btnInserirVideo = document.getElementById("btn-inserir-video");
 const inputImagemConteudo = document.getElementById("input-imagem-conteudo");
+const seletorFonte = document.getElementById("seletor-fonte");
 
 const listaPostadas = document.getElementById("lista-postadas");
 
-// Guarda o link da capa já enviada ao Cloudinary
 let capaUrlAtual = "";
 
-// --- Navegação entre telas ---
 function mostrarTela(tela) {
   [menuArea, criarArea, postadasArea].forEach((secao) => secao.style.display = "none");
   tela.style.display = "block";
@@ -74,7 +71,6 @@ function limparFormulario() {
   capaStatus.textContent = "";
 }
 
-// --- Login ---
 onAuthStateChanged(auth, (usuario) => {
   if (usuario) {
     loginArea.style.display = "none";
@@ -100,7 +96,6 @@ formLogin.addEventListener("submit", async (e) => {
 
 btnSair.addEventListener("click", () => signOut(auth));
 
-// --- Upload de imagem no Cloudinary (reaproveitado pra capa e pro conteúdo) ---
 async function enviarImagemParaCloudinary(arquivo) {
   const dadosForm = new FormData();
   dadosForm.append("file", arquivo);
@@ -114,7 +109,6 @@ async function enviarImagemParaCloudinary(arquivo) {
   return dados.secure_url;
 }
 
-// --- Upload da capa ---
 capaArquivo.addEventListener("change", async () => {
   const arquivo = capaArquivo.files[0];
   if (!arquivo) return;
@@ -128,7 +122,6 @@ capaArquivo.addEventListener("change", async () => {
   capaStatus.textContent = "Imagem enviada!";
 });
 
-// --- Inserir conteúdo no editor rico, na posição do cursor ---
 let ultimaSelecaoRange = null;
 
 function salvarSelecao() {
@@ -167,7 +160,6 @@ function inserirNoEditor(node) {
   salvarSelecao();
 }
 
-// Botão "Inserir imagem aqui"
 btnInserirImagem.addEventListener("click", () => {
   salvarSelecao();
   inputImagemConteudo.click();
@@ -186,7 +178,6 @@ inputImagemConteudo.addEventListener("change", async () => {
   inputImagemConteudo.value = "";
 });
 
-// Botão "Inserir vídeo aqui"
 btnInserirVideo.addEventListener("click", () => {
   salvarSelecao();
   const link = prompt("Cole o link do vídeo (YouTube ou link direto de um arquivo de vídeo):");
@@ -194,7 +185,7 @@ btnInserirVideo.addEventListener("click", () => {
 
   const wrapper = document.createElement("div");
   wrapper.className = "video-inserido";
-  wrapper.contentEditable = "false"; // impede editar por dentro do player
+  wrapper.contentEditable = "false";
   wrapper.innerHTML = converterParaEmbed(link);
   inserirNoEditor(wrapper);
 });
@@ -208,7 +199,31 @@ function converterParaEmbed(link) {
   return `<video controls width="100%" src="${link}"></video>`;
 }
 
-// --- Publicar ou editar notícia ---
+// --- NOVO: Botões de negrito, itálico e sublinhado ---
+document.querySelectorAll(".btn-formato").forEach((botao) => {
+  botao.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    document.execCommand(botao.dataset.comando, false, null);
+  });
+});
+
+// --- NOVO: Trocar a fonte do trecho selecionado ---
+seletorFonte.addEventListener("mousedown", () => salvarSelecao());
+seletorFonte.addEventListener("change", (e) => {
+  const fonte = e.target.value;
+  if (!fonte) return;
+
+  editorConteudo.focus();
+  if (ultimaSelecaoRange) {
+    const selecao = window.getSelection();
+    selecao.removeAllRanges();
+    selecao.addRange(ultimaSelecaoRange);
+  }
+  document.execCommand("fontName", false, fonte);
+  salvarSelecao();
+  e.target.value = "";
+});
+
 formNoticia.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -237,7 +252,6 @@ formNoticia.addEventListener("submit", async (e) => {
   mostrarTela(menuArea);
 });
 
-// --- Notícias Postadas ---
 async function carregarPostadas() {
   listaPostadas.innerHTML = "Carregando...";
 
