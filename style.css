@@ -680,3 +680,7 @@ header nav a:hover {
   border-radius: 6px;
   border: 1px solid #ccc;
 }
+.formato-ativo {
+  background-color: #ffe9a8 !important;
+  color: #1b3a6b !important;
+}
