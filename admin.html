@@ -77,19 +77,22 @@
         <div class="bloco-form">
           <h3>Conteúdo</h3>
           <div class="editor-botoes">
-  <button type="button" class="btn-formato" data-comando="bold"><b>N</b></button>
-  <button type="button" class="btn-formato" data-comando="italic"><i>I</i></button>
-  <button type="button" class="btn-formato" data-comando="underline"><u>S</u></button>
-  <select id="seletor-fonte">
-    <option value="">Fonte...</option>
-    <option value="Poppins">Poppins</option>
-    <option value="Georgia">Georgia</option>
-    <option value="Courier New">Courier New</option>
-    <option value="Comic Sans MS">Comic Sans MS</option>
-  </select>
-  <button type="button" id="btn-inserir-imagem">🖼️ Imagem</button>
-  <button type="button" id="btn-inserir-video">🎬 Vídeo</button>
-</div>
+            <button type="button" class="btn-formato" data-comando="bold"><b>N</b></button>
+            <button type="button" class="btn-formato" data-comando="italic"><i>I</i></button>
+            <button type="button" class="btn-formato" data-comando="underline"><u>S</u></button>
+            <select id="seletor-fonte">
+              <option value="">Fonte...</option>
+              <option value="Poppins">Poppins</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Courier New">Courier New</option>
+              <option value="Comic Sans MS">Comic Sans MS</option>
+            </select>
+            <button type="button" id="btn-inserir-imagem">🖼️ Imagem</button>
+            <button type="button" id="btn-inserir-video">🎬 Vídeo</button>
+          </div>
+          <div id="editor-conteudo" class="editor-rico" contenteditable="true"></div>
+          <input type="file" id="input-imagem-conteudo" accept="image/*" style="display:none;">
+        </div>
 
         <button type="submit" id="btn-salvar">Publicar</button>
       </form>
