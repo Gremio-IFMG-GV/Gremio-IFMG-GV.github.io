@@ -44,8 +44,10 @@ const listaPostadas = document.getElementById("lista-postadas");
 
 let capaUrlAtual = "";
 
+const usuarioArea = document.getElementById("usuario-area");
+
 function mostrarTela(tela) {
-  [menuArea, criarArea, postadasArea].forEach((secao) => secao.style.display = "none");
+  [menuArea, criarArea, postadasArea, usuarioArea].forEach((secao) => secao.style.display = "none");
   tela.style.display = "block";
 }
 
