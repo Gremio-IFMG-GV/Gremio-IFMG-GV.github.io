@@ -1,10 +1,11 @@
-import { db, auth } from "./firebase-config.js";
+import { db, auth, firebaseConfig } from "./firebase-config.js";
+import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import {
   collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc,
   query, orderBy, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 import {
-  signInWithEmailAndPassword, onAuthStateChanged, signOut
+  signInWithEmailAndPassword, onAuthStateChanged, signOut, getAuth, createUserWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
 const CLOUDINARY_CLOUD_NAME = "bkwfwviq";
@@ -329,3 +330,37 @@ function formatarData(timestamp) {
   const data = timestamp.toDate();
   return data.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
 }
+// --- NOVO: Criar usuário sem perder a própria sessão ---
+const btnIrUsuario = document.getElementById("btn-ir-usuario");
+const btnVoltarUsuario = document.getElementById("btn-voltar-usuario");
+const formUsuario = document.getElementById("form-usuario");
+const usuarioStatus = document.getElementById("usuario-status");
+
+btnIrUsuario.addEventListener("click", () => {
+  formUsuario.reset();
+  usuarioStatus.textContent = "";
+  mostrarTela(usuarioArea);
+});
+btnVoltarUsuario.addEventListener("click", () => mostrarTela(menuArea));
+
+formUsuario.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("novo-email").value;
+  const senha = document.getElementById("nova-senha").value;
+
+  usuarioStatus.textContent = "Criando conta...";
+
+  // Cria um "app" separado, só pra essa criação, pra não afetar seu login atual
+  const appSecundario = initializeApp(firebaseConfig, "secundario-" + Date.now());
+  const authSecundario = getAuth(appSecundario);
+
+  try {
+    await createUserWithEmailAndPassword(authSecundario, email, senha);
+    usuarioStatus.textContent = "Usuário criado com sucesso!";
+    formUsuario.reset();
+  } catch (erro) {
+    usuarioStatus.textContent = "Erro ao criar usuário: " + erro.message;
+  } finally {
+    await deleteApp(appSecundario);
+  }
+});
