@@ -37,6 +37,7 @@ const btnInserirImagem = document.getElementById("btn-inserir-imagem");
 const btnInserirVideo = document.getElementById("btn-inserir-video");
 const inputImagemConteudo = document.getElementById("input-imagem-conteudo");
 const seletorFonte = document.getElementById("seletor-fonte");
+const btnFormatoElementos = document.querySelectorAll(".btn-formato");
 
 const listaPostadas = document.getElementById("lista-postadas");
 
@@ -130,9 +131,28 @@ function salvarSelecao() {
     ultimaSelecaoRange = selecao.getRangeAt(0).cloneRange();
   }
 }
-editorConteudo.addEventListener("keyup", salvarSelecao);
-editorConteudo.addEventListener("mouseup", salvarSelecao);
-editorConteudo.addEventListener("click", salvarSelecao);
+
+// NOVO: verifica o que está "ativo" (negrito/itálico/sublinhado/fonte)
+// na posição atual do cursor, e destaca os botões/seletor correspondentes
+function atualizarEstadoBotoes() {
+  btnFormatoElementos.forEach((botao) => {
+    const ativo = document.queryCommandState(botao.dataset.comando);
+    botao.classList.toggle("formato-ativo", ativo);
+  });
+
+  const fonteAtual = document.queryCommandValue("fontName").replace(/['"]/g, "");
+  const opcaoExistente = Array.from(seletorFonte.options).find((op) => op.value === fonteAtual);
+  seletorFonte.value = opcaoExistente ? fonteAtual : "";
+}
+
+function aoMexerNoEditor() {
+  salvarSelecao();
+  atualizarEstadoBotoes();
+}
+
+editorConteudo.addEventListener("keyup", aoMexerNoEditor);
+editorConteudo.addEventListener("mouseup", aoMexerNoEditor);
+editorConteudo.addEventListener("click", aoMexerNoEditor);
 
 function inserirNoEditor(node) {
   editorConteudo.focus();
@@ -199,15 +219,16 @@ function converterParaEmbed(link) {
   return `<video controls width="100%" src="${link}"></video>`;
 }
 
-// --- NOVO: Botões de negrito, itálico e sublinhado ---
-document.querySelectorAll(".btn-formato").forEach((botao) => {
+// Botões de negrito, itálico e sublinhado
+btnFormatoElementos.forEach((botao) => {
   botao.addEventListener("mousedown", (e) => {
     e.preventDefault();
     document.execCommand(botao.dataset.comando, false, null);
+    atualizarEstadoBotoes();
   });
 });
 
-// --- NOVO: Trocar a fonte do trecho selecionado ---
+// Trocar a fonte do trecho selecionado
 seletorFonte.addEventListener("mousedown", () => salvarSelecao());
 seletorFonte.addEventListener("change", (e) => {
   const fonte = e.target.value;
@@ -221,7 +242,7 @@ seletorFonte.addEventListener("change", (e) => {
   }
   document.execCommand("fontName", false, fonte);
   salvarSelecao();
-  e.target.value = "";
+  atualizarEstadoBotoes();
 });
 
 formNoticia.addEventListener("submit", async (e) => {
