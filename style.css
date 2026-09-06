@@ -481,8 +481,10 @@ header nav a:hover {
   color: #1b3a6b;
   text-decoration: none;
   font-weight: 600;
+  border: none;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   transition: background-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+}
 }
 
 .botao-suave:hover {
@@ -707,4 +709,32 @@ header nav a:hover {
 
 .popup-caixa p {
   margin-bottom: 20px;
+}
+#usuario-area {
+  max-width: 500px;
+  margin: 40px auto;
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+#form-usuario {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#form-usuario input,
+#form-usuario button {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+#form-usuario button {
+  background-color: #1b3a6b;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
 }
