@@ -8,6 +8,20 @@ import {
   signInWithEmailAndPassword, onAuthStateChanged, signOut, getAuth, createUserWithEmailAndPassword,
   setPersistence, browserLocalPersistence, browserSessionPersistence, sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+// Ícones de olho (SVG simples, sem emoji)
+const ICONE_OLHO_ABERTO = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>';
+const ICONE_OLHO_FECHADO = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a21.6 21.6 0 0 1 5.06-6.06M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 7 11 7a21.6 21.6 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+
+// Pop-up centralizado, reaproveitado no admin
+function mostrarPopupAdmin(mensagem) {
+  const overlay = document.getElementById("popup-overlay");
+  const texto = document.getElementById("popup-mensagem");
+  const botaoOk = document.getElementById("popup-ok");
+
+  texto.textContent = mensagem;
+  overlay.style.display = "flex";
+  botaoOk.onclick = () => overlay.style.display = "none";
+}
 
 const CLOUDINARY_CLOUD_NAME = "bkwfwviq";
 const CLOUDINARY_UPLOAD_PRESET = "Site-IFMG";
@@ -112,10 +126,15 @@ formLogin.addEventListener("submit", async (e) => {
   }
 });
 
-// Mostrar/esconder a senha digitada
+// Mostrar/esconder a senha digitada, trocando o ícone junto
+const iconeOlho = document.getElementById("icone-olho");
+iconeOlho.innerHTML = ICONE_OLHO_ABERTO;
+
 document.getElementById("btn-mostrar-senha").addEventListener("click", () => {
   const campoSenha = document.getElementById("senha");
-  campoSenha.type = campoSenha.type === "password" ? "text" : "password";
+  const mostrando = campoSenha.type === "password";
+  campoSenha.type = mostrando ? "text" : "password";
+  iconeOlho.innerHTML = mostrando ? ICONE_OLHO_FECHADO : ICONE_OLHO_ABERTO;
 });
 
 // Esqueceu a senha
@@ -126,13 +145,13 @@ document.getElementById("link-esqueceu-senha").addEventListener("click", async (
     erroLogin.textContent = "Digite seu e-mail no campo acima primeiro.";
     return;
   }
-  try {
-    await sendPasswordResetEmail(auth, email);
-    erroLogin.textContent = "";
-    alert("E-mail de redefinição enviado! Confira sua caixa de entrada.");
-  } catch (erro) {
-    erroLogin.textContent = "Não foi possível enviar o e-mail: " + erro.message;
-  }
+ try {
+  await sendPasswordResetEmail(auth, email);
+  erroLogin.textContent = "";
+  mostrarPopupAdmin("E-mail de redefinição enviado! Confira sua caixa de entrada (e o spam).");
+} catch (erro) {
+  erroLogin.textContent = "Não foi possível enviar o e-mail: " + erro.message;
+}
 });
 
 btnSair.addEventListener("click", () => signOut(auth));
