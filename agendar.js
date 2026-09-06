@@ -2,6 +2,9 @@ import { db } from "./firebase-config.js";
 import {
   collection, addDoc, getDocs, query, where, serverTimestamp, Timestamp
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+// Mostra o pop-up centralizado. Se "redirecionarParaHome" for true,
+// ao clicar OK a pessoa vai pra página inicial.
 function mostrarPopup(mensagem, redirecionarParaHome) {
   const overlay = document.getElementById("popup-overlay");
   const texto = document.getElementById("popup-mensagem");
@@ -17,11 +20,9 @@ function mostrarPopup(mensagem, redirecionarParaHome) {
     }
   };
 }
+
 emailjs.init("Y2p4-JQhyVwsirKI7");
 
-// Lista de e-mails que recebem a notificação de cada agendamento.
-// Pra adicionar mais, é só colocar entre aspas, separado por vírgula:
-// ["email1@exemplo.com", "email2@exemplo.com"]
 const EMAILS_DESTINO = [
   "0117389@academico.ifmg.edu.br"
 ];
@@ -29,11 +30,9 @@ const EMAILS_DESTINO = [
 const form = document.querySelector("form[data-atividade]");
 const atividade = form.dataset.atividade;
 
-// Calcula o momento exato (dia + hora final) em que o agendamento vence,
-// usado pelo Firestore TTL pra apagar automaticamente depois
 function calcularExpiraEm(diaTexto, horarioTexto) {
   const [dia, mes, ano] = diaTexto.split("/").map(Number);
-  const horaFim = parseInt(horarioTexto.split("-")[1], 10); // "13h-14h" -> pega o "14h" -> 14
+  const horaFim = parseInt(horarioTexto.split("-")[1], 10);
   return new Date(ano, mes - 1, dia, horaFim, 0, 0);
 }
 
@@ -47,7 +46,7 @@ form.addEventListener("submit", async (e) => {
   const horario = form.querySelector("[name=horario]").value;
 
   if (!dia) {
-    alert("Escolha um dia no calendário antes de agendar.");
+    mostrarPopup("Escolha um dia no calendário antes de agendar.", false);
     return;
   }
 
@@ -60,7 +59,7 @@ form.addEventListener("submit", async (e) => {
   const jaExiste = await getDocs(q);
 
   if (!jaExiste.empty) {
-    alert("Esse horário já está reservado. Escolha outro dia ou horário.");
+    mostrarPopup("Esse horário já está reservado. Escolha outro dia ou horário.", false);
     return;
   }
 
@@ -87,7 +86,8 @@ form.addEventListener("submit", async (e) => {
     });
   });
 
-  alert("Agendamento realizado com sucesso!");
+  mostrarPopup("Agendamento realizado com sucesso!", true);
+
   form.reset();
   document.getElementById("data-selecionada").value = "";
   document.querySelectorAll(".dia-selecionado").forEach(function (el) {
