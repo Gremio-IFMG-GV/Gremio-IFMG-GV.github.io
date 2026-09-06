@@ -38,16 +38,20 @@
         <h2>Painel de Notícias</h2>
         <button id="btn-sair">Logout</button>
       </div>
-      <div class="menu-opcoes">
-        <button type="button" id="btn-ir-criar" class="menu-card">
-          <span class="menu-card-icone">📝</span>
-          <span>Criar Notícia</span>
-        </button>
-        <button type="button" id="btn-ir-postadas" class="menu-card">
-          <span class="menu-card-icone">📋</span>
-          <span>Notícias Postadas</span>
-        </button>
-      </div>
+     <div class="menu-opcoes">
+  <button type="button" id="btn-ir-criar" class="menu-card">
+    <span class="menu-card-icone">📝</span>
+    <span>Criar Notícia</span>
+  </button>
+  <button type="button" id="btn-ir-postadas" class="menu-card">
+    <span class="menu-card-icone">📋</span>
+    <span>Notícias Postadas</span>
+  </button>
+  <button type="button" id="btn-ir-usuario" class="menu-card">
+    <span class="menu-card-icone">👤</span>
+    <span>Criar Usuário</span>
+  </button>
+</div>
     </section>
 
     <!-- TELA 3: Criar/Editar Notícia -->
@@ -104,7 +108,20 @@
       <h2>Notícias Postadas</h2>
       <div class="noticias-grid" id="lista-postadas"></div>
     </section>
+<section id="usuario-area" style="display:none;">
+  <button type="button" id="btn-voltar-usuario" class="botao-suave">&larr; Voltar ao menu</button>
+  <h2>Criar Usuário</h2>
+  <form id="form-usuario">
+    <label for="novo-email">E-mail do novo usuário:</label>
+    <input type="email" id="novo-email" required>
 
+    <label for="nova-senha">Senha (mínimo 6 caracteres):</label>
+    <input type="password" id="nova-senha" minlength="6" required>
+
+    <button type="submit">Criar conta</button>
+  </form>
+  <p id="usuario-status" class="status-upload"></p>
+</section>
   </main>
 
   <footer>
