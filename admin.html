@@ -6,7 +6,6 @@
   <title>Painel de Notícias — Espaço IFMG</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <!-- Cabeçalho igual ao resto do site, nada novo aqui  -->
 </head>
 <body>
   <header>
@@ -20,74 +19,82 @@
 
   <main>
 
-    <!-- BLOCO 1: tela de login. Fica visível por padrão -->
+    <!-- TELA 1: Login -->
     <section id="login-area">
       <h2>Painel de Notícias</h2>
       <form id="form-login">
-        <!-- id="form-login" é como o admin.js vai "achar" esse formulário no código -->
-
         <label for="email">E-mail:</label>
         <input type="email" id="email" required>
-        <!-- id="email" é como o admin.js vai pegar o que a pessoa digitou aqui -->
-
         <label for="senha">Senha:</label>
         <input type="password" id="senha" required>
-        <!-- type="password" faz o navegador esconder os caracteres digitados -->
-
         <button type="submit">Entrar</button>
-        <!-- type="submit" faz esse botão "disparar" o formulário ao ser clicado -->
       </form>
       <p id="erro-login" class="erro"></p>
-      <!-- Começa vazio; o admin.js escreve uma mensagem aqui se o login falhar -->
     </section>
 
-    <!-- BLOCO 2: painel de verdade. Começa ESCONDIDO (style="display:none") -->
-    <!-- O admin.js troca isso pra visível assim que confirma que você logou -->
-    <section id="painel-area" style="display:none;">
+    <!-- TELA 2: Menu principal -->
+    <section id="menu-area" style="display:none;">
       <div class="painel-topo">
         <h2>Painel de Notícias</h2>
         <button id="btn-sair">Sair</button>
       </div>
+      <div class="menu-opcoes">
+        <button type="button" id="btn-ir-criar" class="menu-card">
+          <span class="menu-card-icone">📝</span>
+          <span>Criar Notícia</span>
+        </button>
+        <button type="button" id="btn-ir-postadas" class="menu-card">
+          <span class="menu-card-icone">📋</span>
+          <span>Notícias Postadas</span>
+        </button>
+      </div>
+    </section>
 
-      <!-- Formulário único que serve tanto pra CRIAR quanto EDITAR uma notícia -->
+    <!-- TELA 3: Criar/Editar Notícia -->
+    <section id="criar-area" style="display:none;">
+      <button type="button" id="btn-voltar-criar" class="botao-suave">&larr; Voltar ao menu</button>
+      <h2 id="titulo-tela-criar">Criar Notícia</h2>
+
       <form id="form-noticia">
         <input type="hidden" id="noticia-id">
-        <!-- type="hidden" = campo invisível pro usuário, mas existe no código.
-             Fica vazio quando é notícia nova; recebe um valor quando você
-             clica em "Editar" numa notícia já existente (explico no admin.js) -->
 
-        <label for="titulo">Título:</label>
-        <input type="text" id="titulo" required>
+        <div class="bloco-form">
+          <h3>Informações</h3>
+          <label for="titulo">Título:</label>
+          <input type="text" id="titulo" required>
 
-        <label for="capa">Link da imagem de capa:</label>
-        <input type="url" id="capa" required>
-        <!-- type="url" faz o navegador conferir se parece um link válido -->
+          <label for="resumo">Resumo (aparece na prévia):</label>
+          <textarea id="resumo" required></textarea>
+        </div>
 
-        <label for="resumo">Resumo (aparece na prévia):</label>
-        <textarea id="resumo" required></textarea>
-        <!-- textarea = caixa de texto que permite várias linhas -->
+        <div class="bloco-form">
+          <h3>Capa</h3>
+          <input type="file" id="capa-arquivo" accept="image/*">
+          <p id="capa-status" class="status-upload"></p>
+          <img id="capa-preview" class="preview-capa" style="display:none;">
+        </div>
 
-        <label for="tipo">Tipo de conteúdo:</label>
-        <select id="tipo">
-          <!-- select = menu suspenso; cada option é uma opção da lista -->
-          <option value="texto">Só texto</option>
-          <option value="imagem">Texto + imagem</option>
-          <option value="video">Texto + vídeo</option>
-        </select>
-
-        <label for="conteudo">Conteúdo completo (texto, ou link da imagem/vídeo):</label>
-        <textarea id="conteudo" required></textarea>
+        <div class="bloco-form">
+          <h3>Conteúdo</h3>
+          <div class="editor-botoes">
+            <button type="button" id="btn-inserir-imagem">🖼️ Inserir imagem aqui</button>
+            <button type="button" id="btn-inserir-video">🎬 Inserir vídeo aqui</button>
+          </div>
+          <div id="editor-conteudo" class="editor-rico" contenteditable="true"></div>
+          <input type="file" id="input-imagem-conteudo" accept="image/*" style="display:none;">
+        </div>
 
         <button type="submit" id="btn-salvar">Publicar</button>
-        <!-- O texto desse botão muda pra "Salvar alterações" quando
-             você está editando uma notícia já existente -->
       </form>
-
-      <h3>Notícias publicadas</h3>
-      <div id="lista-noticias"></div>
-      <!-- Começa vazia; o admin.js preenche isso com a lista de notícias
-           que ele busca no Firestore -->
     </section>
+
+    <!-- TELA 4: Notícias Postadas -->
+    <section id="postadas-area" style="display:none;">
+      <button type="button" id="btn-voltar-postadas" class="botao-suave">&larr; Voltar ao menu</button>
+      <h2>Notícias Postadas</h2>
+      <div class="noticias-grid" id="lista-postadas"></div>
+    </section>
+
   </main>
 
   <footer>
@@ -95,6 +102,5 @@
   </footer>
 
   <script type="module" src="admin.js"></script>
-  <!-- type="module" é necessário porque o admin.js usa "import" -->
 </body>
 </html>
