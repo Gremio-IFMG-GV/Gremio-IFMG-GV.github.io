@@ -2,7 +2,21 @@ import { db } from "./firebase-config.js";
 import {
   collection, addDoc, getDocs, query, where, serverTimestamp, Timestamp
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+function mostrarPopup(mensagem, redirecionarParaHome) {
+  const overlay = document.getElementById("popup-overlay");
+  const texto = document.getElementById("popup-mensagem");
+  const botaoOk = document.getElementById("popup-ok");
 
+  texto.textContent = mensagem;
+  overlay.style.display = "flex";
+
+  botaoOk.onclick = function () {
+    overlay.style.display = "none";
+    if (redirecionarParaHome) {
+      window.location.href = "index.html";
+    }
+  };
+}
 emailjs.init("Y2p4-JQhyVwsirKI7");
 
 // Lista de e-mails que recebem a notificação de cada agendamento.
