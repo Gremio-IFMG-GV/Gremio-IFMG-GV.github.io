@@ -5,7 +5,8 @@ import {
   query, orderBy, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 import {
-  signInWithEmailAndPassword, onAuthStateChanged, signOut, getAuth, createUserWithEmailAndPassword
+  signInWithEmailAndPassword, onAuthStateChanged, signOut, getAuth, createUserWithEmailAndPassword,
+  setPersistence, browserLocalPersistence, browserSessionPersistence, sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
 const CLOUDINARY_CLOUD_NAME = "bkwfwviq";
@@ -89,8 +90,12 @@ formLogin.addEventListener("submit", async (e) => {
   e.preventDefault();
   const email = document.getElementById("email").value;
   const senha = document.getElementById("senha").value;
+  const manterLogin = document.getElementById("manter-login").checked;
 
   try {
+    // "Manter login" = fica logado mesmo fechando o navegador.
+    // Sem marcar = desloga automaticamente ao fechar a aba.
+    await setPersistence(auth, manterLogin ? browserLocalPersistence : browserSessionPersistence);
     await signInWithEmailAndPassword(auth, email, senha);
     erroLogin.textContent = "";
   } catch (erro) {
@@ -98,6 +103,28 @@ formLogin.addEventListener("submit", async (e) => {
   }
 });
 
+// Mostrar/esconder a senha digitada
+document.getElementById("btn-mostrar-senha").addEventListener("click", () => {
+  const campoSenha = document.getElementById("senha");
+  campoSenha.type = campoSenha.type === "password" ? "text" : "password";
+});
+
+// Esqueceu a senha: manda e-mail de redefinição de verdade
+document.getElementById("link-esqueceu-senha").addEventListener("click", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("email").value;
+  if (!email) {
+    erroLogin.textContent = "Digite seu e-mail no campo acima primeiro.";
+    return;
+  }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    erroLogin.textContent = "";
+    alert("E-mail de redefinição enviado! Confira sua caixa de entrada.");
+  } catch (erro) {
+    erroLogin.textContent = "Não foi possível enviar o e-mail: " + erro.message;
+  }
+});
 btnSair.addEventListener("click", () => signOut(auth));
 
 async function enviarImagemParaCloudinary(arquivo) {
