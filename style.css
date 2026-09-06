@@ -1,111 +1,76 @@
+/* ===== Base ===== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
 body {
   font-family: 'Poppins', sans-serif;
   color: #222;
-  background-color: #f7f7f7;
+  background-color: #f5f1ea;
   line-height: 1.6;
 }
 
+/* ===== Cabeçalho ===== */
 header {
   background-color: #1b3a6b;
   color: white;
   padding: 20px 40px;
   display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
   justify-content: space-between;
   align-items: center;
+}
+
+header nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 header nav a {
   color: white;
   text-decoration: none;
-  margin-left: 24px;
   font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 8px;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
 }
 
 header nav a:hover {
-  text-decoration: underline;
-}
-
-.hero {
-  padding: 40px;
-}
-
-.itens {
-  display: flex;
-  gap: 24px;
-  padding: 0 40px 40px 40px;
-  flex-wrap: wrap;
-}
-
-.item-card {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  flex: 1;
-  min-width: 240px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-}
-
-.item-card a {
-  display: inline-block;
-  margin-top: 12px;
-  background-color: #1b3a6b;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.5);
+  color: #ffe9a8;
   text-decoration: none;
 }
 
-.item-agendamento {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  margin: 0 40px 24px 40px;
+@media (max-width: 600px) {
+  header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 16px 20px;
+  }
+
+  header h1 {
+    font-size: 1.3em;
+    white-space: nowrap;
+  }
+
+  header nav {
+    justify-content: center;
+  }
 }
 
-.item-agendamento form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-width: 300px;
-}
-
-.item-agendamento input,
-.item-agendamento select,
-.item-agendamento button {
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-.item-agendamento button {
-  background-color: #1b3a6b;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-.post {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  margin: 24px 40px;
-}
-
-.post .data {
-  color: #888;
-  font-size: 0.9em;
-  margin-bottom: 8px;
-}
+/* ===== Hero (home) ===== */
 .hero {
   padding: 40px;
   text-align: center;
 }
 
+/* ===== Notícias em destaque (home) ===== */
 .noticias-destaque {
   padding: 0 40px 40px 40px;
 }
@@ -120,6 +85,22 @@ header nav a:hover {
   flex-wrap: wrap;
 }
 
+.noticias-grid .noticia-card {
+  max-width: 380px;
+}
+
+.ver-todas {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.ver-todas a {
+  color: #1b3a6b;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ===== Cartão de notícia (reutilizado em vários lugares) ===== */
 .noticia-card {
   background: white;
   border-radius: 12px;
@@ -131,23 +112,17 @@ header nav a:hover {
   flex-direction: column;
 }
 
-.noticias-grid .noticia-card {
-  max-width: 380px;
+.noticia-card a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
 }
 
 .noticia-card img {
   width: 100%;
+  height: 220px;
+  object-fit: cover;
   display: block;
-}
-
-.noticia-video {
-  background-color: #1b3a6b;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 180px;
-  font-weight: 600;
 }
 
 .noticia-card h3,
@@ -171,16 +146,7 @@ header nav a:hover {
   margin-bottom: 20px;
 }
 
-.ver-todas {
-  margin-top: 24px;
-  text-align: center;
-}
-
-.ver-todas a {
-  color: #1b3a6b;
-  font-weight: 600;
-  text-decoration: none;
-}
+/* ===== Lista de notícias (página Notícias) ===== */
 .titulo-pagina {
   padding: 40px 40px 0 40px;
 }
@@ -197,96 +163,8 @@ header nav a:hover {
   margin: 0 auto;
   width: 100%;
 }
-/* Caixa branca centralizada tanto pro login quanto pro painel */
-#painel-area {
-  max-width: 500px;
-  margin: 40px auto; /* "auto" nas laterais = centraliza horizontalmente */
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-}
 
-/* Empilha os campos do formulário, um embaixo do outro, com espaçamento */
-#form-login, #form-noticia {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* Estilo padrão dos campos e botões dentro dos formulários */
-#form-login input, #form-noticia input,
-#form-noticia select, #form-noticia textarea,
-#form-login button, #form-noticia button {
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-#form-noticia textarea {
-  min-height: 80px; /* deixa as caixas de texto maior um pouco maiores */
-}
-
-/* Deixa os botões de "Entrar" e "Publicar" com a cor de destaque do site */
-#form-login button, #form-noticia button {
-  background-color: #1b3a6b;
-  color: white;
-  border: none;
-  cursor: pointer; /* muda o cursor do mouse pra "mãozinha" ao passar por cima */
-  font-weight: 600;
-}
-
-/* Coloca o título "Painel de Notícias" e o botão "Sair" nas pontas opostas */
-.painel-topo {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.painel-topo button {
-  background-color: #b23b3b; /* vermelho, pra indicar ação de "sair" */
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.erro {
-  color: #b23b3b;
-  font-size: 0.9em;
-}
-
-/* Cada linha da lista de notícias no painel */
-.item-lista-noticia {
-  padding: 10px 0;
-  border-bottom: 1px solid #eee; /* uma linha fina separando cada item */
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  justify-content: space-between;
-}
-
-.item-lista-noticia button {
-  padding: 4px 10px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  color: white;
-}
-
-.item-lista-noticia .btn-editar {
-  background-color: #1b3a6b; /* azul = editar */
-}
-
-.item-lista-noticia .btn-excluir {
-  background-color: #b23b3b; /* vermelho = excluir */
-}
-.noticia-card a {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-}
-
+/* ===== Página individual de notícia ===== */
 #noticia-conteudo {
   max-width: 700px;
   margin: 0 auto;
@@ -300,6 +178,175 @@ header nav a:hover {
   border-radius: 12px;
   margin: 16px 0;
 }
+
+.resumo-destaque {
+  font-style: italic;
+  color: #555;
+  margin: 12px 0;
+}
+
+.conteudo-rico img,
+.conteudo-rico iframe,
+.conteudo-rico video {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 12px 0;
+}
+
+/* ===== Botões "voltar" reutilizáveis ===== */
+.botao-voltar {
+  display: inline-block;
+  padding: 8px 18px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #1b3a6b;
+  text-decoration: none;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: background-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+}
+
+.botao-voltar:hover {
+  background-color: #fff8e6;
+  box-shadow: 0 0 14px rgba(255, 233, 168, 0.7);
+  color: #a3781a;
+}
+
+.botao-suave {
+  display: inline-block;
+  padding: 8px 18px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #1b3a6b;
+  text-decoration: none;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: background-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+}
+
+.botao-suave:hover {
+  background-color: #fdf6e8;
+  box-shadow: 0 0 8px rgba(255, 233, 168, 0.4);
+  color: #a3781a;
+}
+
+.botao-voltar-painel {
+  display: inline-block;
+  padding: 8px 18px;
+  border-radius: 8px;
+  background-color: #f5f1ea;
+  color: #1b3a6b;
+  text-decoration: none;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+}
+
+.botao-voltar-painel:hover {
+  background-color: #fff8e6;
+  box-shadow: 0 0 14px rgba(255, 233, 168, 0.7);
+  color: #a3781a;
+}
+
+@media (max-width: 600px) {
+  .botao-suave {
+    padding: 6px 14px;
+    font-size: 0.9em;
+  }
+}
+
+/* ===== Agendamento: seleção de atividade ===== */
+.seletor {
+  display: flex;
+  gap: 24px;
+  padding: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.atividade-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 260px;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.atividade-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+}
+
+.atividade-card h3 {
+  padding: 16px;
+  text-align: center;
+}
+
+.atividade-card:hover {
+  box-shadow: 0 0 10px rgba(27, 58, 107, 0.25);
+  transform: translateY(-2px);
+}
+
+/* ===== Agendamento: formulário de cada atividade ===== */
+.item-agendamento {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 420px;
+  margin: 0 auto 24px auto;
+}
+
+.item-agendamento > p:first-child {
+  margin-bottom: 16px;
+}
+
+.item-agendamento form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 100%;
+}
+
+.item-agendamento input,
+.item-agendamento select,
+.item-agendamento button {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.item-agendamento button {
+  background-color: #1b3a6b;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  #calendario {
+    margin-top: 10px;
+  }
+
+  .item-agendamento label {
+    margin-top: 4px;
+  }
+
+  .item-agendamento {
+    margin-top: 24px;
+  }
+}
+
+/* ===== Calendário ===== */
 #calendario .calendario-cabecalho {
   display: flex;
   justify-content: space-between;
@@ -356,336 +403,8 @@ header nav a:hover {
   background-color: #1b3a6b !important;
   color: white;
 }
-.noticia-card img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  display: block;
-}
-/* Cor de fundo off-white, mais suave que o branco puro */
-body {
-  background-color: #f5f1ea;
-}
 
-/* Cabeçalho: permite quebrar linha em telas pequenas, com espaçamento certo */
-header {
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-header nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-/* Nav vira "botão" de verdade: fundo, cantos arredondados, espaço próprio */
-header nav a {
-  margin-left: 0;
-  padding: 8px 18px;
-  border-radius: 8px;
-  transition: background-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
-}
-
-/* Efeito de "iluminação" ao passar o mouse */
-header nav a:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 0 14px rgba(255, 255, 255, 0.5);
-  color: #ffe9a8;
-  text-decoration: none;
-}
-
-/* Em telas pequenas (celular): título em cima, menu embaixo, tudo centralizado */
-@media (max-width: 600px) {
-  header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 16px 20px;
-    .item-agendamento {
-  margin-top: 24px;
-}
-  }
-
-  header h1 {
-    font-size: 1.3em;
-    white-space: nowrap;
-  }
-
-  header nav {
-    justify-content: center;
-  }
-}
-.botao-voltar {
-  display: inline-block;
-  padding: 8px 18px;
-  border-radius: 8px;
-  background-color: #ffffff;
-  color: #1b3a6b;
-  text-decoration: none;
-  font-weight: 600;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  transition: background-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
-}
-
-.botao-voltar:hover {
-  background-color: #fff8e6;
-  box-shadow: 0 0 14px rgba(255, 233, 168, 0.7);
-  color: #a3781a;
-}
-/* Centraliza as 3 opções e permite empilhar no celular */
-.seletor {
-  display: flex;
-  gap: 24px;
-  padding: 40px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-/* Cada opção vira um card com foto */
-.atividade-card {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  width: 260px;
-  text-decoration: none;
-  color: inherit;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
-}
-
-.atividade-card img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  display: block;
-}
-
-.atividade-card h3 {
-  padding: 16px;
-  text-align: center;
-}
-
-/* Brilho mais suave que o das notícias, com uma leve "subida" no hover */
-.atividade-card:hover {
-  box-shadow: 0 0 10px rgba(27, 58, 107, 0.25);
-  transform: translateY(-2px);
-}
-
-/* Botão "voltar" com brilho mais fraco que o botao-voltar das notícias */
-.botao-suave {
-  display: inline-block;
-  padding: 8px 18px;
-  border-radius: 8px;
-  background-color: #ffffff;
-  color: #1b3a6b;
-  text-decoration: none;
-  font-weight: 600;
-  border: none;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  transition: background-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
-}
-}
-
-.botao-suave:hover {
-  background-color: #fdf6e8;
-  box-shadow: 0 0 8px rgba(255, 233, 168, 0.4);
-  color: #a3781a;
-}
-/* Centraliza o cartão de agendamento e deixa a largura do tamanho do conteúdo,
-   em vez de esticar pela tela toda */
-.item-agendamento {
-  max-width: 420px;
-  margin: 0 auto 24px auto;
-}
-
-.item-agendamento form {
-  max-width: 100%;
-}
-
-/* Mais espaço entre o botão "voltar" e o resto do formulário */
-.item-agendamento > p:first-child {
-  margin-bottom: 16px;
-}
-
-/* Ajustes específicos pra celular: botão menor e mais respiro antes do calendário */
-@media (max-width: 600px) {
-  .botao-suave {
-    padding: 6px 14px;
-    font-size: 0.9em;
-  }
-
-  #calendario {
-    margin-top: 10px;
-  }
-
-  .item-agendamento label {
-    margin-top: 4px;
-  }
-
-  .item-agendamento {
-    margin-top: 24px;
-  }
-}
-/* Tela de menu com 2 cartões grandes */
-.menu-opcoes {
-  display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: 20px 0;
-}
-
-.menu-card {
-  background: white;
-  border: none;
-  border-radius: 12px;
-  padding: 40px 30px;
-  width: 200px;
-  cursor: pointer;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  font-weight: 600;
-  font-size: 1.1em;
-  color: #1b3a6b;
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
-}
-
-.menu-card:hover {
-  box-shadow: 0 0 12px rgba(27, 58, 107, 0.25);
-  transform: translateY(-2px);
-}
-
-.menu-card-icone {
-  font-size: 2.2em;
-}
-
-/* Blocos organizados dentro do formulário de criar notícia */
-.bloco-form {
-  background: #fbfaf7;
-  border: 1px solid #eee;
-  border-radius: 10px;
-  padding: 16px;
-  margin-bottom: 16px;
-}
-
-.bloco-form h3 {
-  margin-bottom: 10px;
-  font-size: 1em;
-  color: #1b3a6b;
-}
-
-.status-upload {
-  font-size: 0.85em;
-  color: #888;
-  margin-top: 6px;
-}
-
-.preview-capa {
-  max-width: 220px;
-  border-radius: 8px;
-  margin-top: 10px;
-}
-
-/* Editor de texto rico */
-.editor-botoes {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-}
-
-.editor-botoes button {
-  background-color: #1b3a6b;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9em;
-}
-
-.editor-rico {
-  min-height: 200px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 14px;
-  background: white;
-}
-
-.editor-rico img.imagem-inserida {
-  max-width: 100%;
-  border-radius: 8px;
-  margin: 10px 0;
-  display: block;
-}
-
-.video-inserido {
-  margin: 10px 0;
-}
-
-.video-inserido iframe,
-.video-inserido video {
-  border-radius: 8px;
-  max-width: 100%;
-}
-
-/* Botões dentro dos cards de "Notícias Postadas" */
-.card-postada-botoes {
-  display: flex;
-  gap: 8px;
-  padding: 0 20px 16px 20px;
-}
-
-.card-postada-botoes button {
-  flex: 1;
-  padding: 6px 0;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  color: white;
-  font-weight: 600;
-}
-
-.btn-editar-postada {
-  background-color: #1b3a6b;
-}
-
-.btn-excluir-postada {
-  background-color: #b23b3b;
-}
-
-/* Página individual de notícia: conteúdo rico */
-.resumo-destaque {
-  font-style: italic;
-  color: #555;
-  margin: 12px 0;
-}
-
-.conteudo-rico img,
-.conteudo-rico iframe,
-.conteudo-rico video {
-  max-width: 100%;
-  border-radius: 8px;
-  margin: 12px 0;
-}
-.btn-formato {
-  font-size: 1em;
-  padding: 8px 12px !important;
-}
-
-#seletor-fonte {
-  padding: 6px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-.formato-ativo {
-  background-color: #ffe9a8 !important;
-  color: #1b3a6b !important;
-}
+/* ===== Pop-up centralizado (agendamento e admin) ===== */
 .popup-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -707,6 +426,10 @@ header nav a:hover {
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
 }
 
+.popup-caixa p {
+  margin-bottom: 20px;
+}
+
 .popup-caixa button {
   background-color: #1b3a6b;
   color: white;
@@ -721,37 +444,7 @@ header nav a:hover {
   background-color: #24498a;
 }
 
-.popup-caixa p {
-  margin-bottom: 20px;
-}
-#usuario-area {
-  max-width: 500px;
-  margin: 40px auto;
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-}
-
-#form-usuario {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-#form-usuario input,
-#form-usuario button {
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-#form-usuario button {
-  background-color: #1b3a6b;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-}
+/* ===== Painel de notícias: login ===== */
 .tela-login {
   min-height: 70vh;
   display: flex;
@@ -795,17 +488,24 @@ header nav a:hover {
 
 .campo-senha-wrapper input {
   width: 100%;
+  padding-right: 48px; /* espaço pra não o texto ficar embaixo do ícone */
 }
 
-.btn-olho {
+#form-login button.btn-olho {
   position: absolute;
-  right: 16px;
+  right: 14px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
+  color: #888;
   border: none;
   cursor: pointer;
-  font-size: 1em;
+  padding: 4px;
+  display: flex;
+}
+
+#form-login button.btn-olho:hover {
+  color: #1b3a6b;
 }
 
 .manter-login {
@@ -845,21 +545,200 @@ header nav a:hover {
   color: #1b3a6b;
   text-decoration: none;
 }
-.botao-voltar-painel {
-  display: inline-block;
-  padding: 8px 18px;
-  border-radius: 8px;
-  background-color: #f5f1ea;
-  color: #1b3a6b;
-  text-decoration: none;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+
+/* ===== Painel de notícias: menu, formulários, editor ===== */
+#painel-area, #usuario-area {
+  max-width: 500px;
+  margin: 40px auto;
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
 }
 
-.botao-voltar-painel:hover {
-  background-color: #fff8e6;
-  box-shadow: 0 0 14px rgba(255, 233, 168, 0.7);
-  color: #a3781a;
+#form-login, #form-noticia, #form-usuario {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#form-noticia input, #form-noticia select, #form-noticia textarea, #form-noticia button,
+#form-usuario input, #form-usuario button {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+#form-noticia textarea {
+  min-height: 80px;
+}
+
+#form-noticia button, #form-usuario button {
+  background-color: #1b3a6b;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.painel-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.painel-topo button {
+  background-color: #b23b3b;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.erro {
+  color: #b23b3b;
+  font-size: 0.9em;
+}
+
+.menu-opcoes {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.menu-card {
+  background: white;
+  border: none;
+  border-radius: 12px;
+  padding: 40px 30px;
+  width: 200px;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  font-size: 1.1em;
+  color: #1b3a6b;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.menu-card:hover {
+  box-shadow: 0 0 12px rgba(27, 58, 107, 0.25);
+  transform: translateY(-2px);
+}
+
+.menu-card-icone {
+  font-size: 2.2em;
+}
+
+.bloco-form {
+  background: #fbfaf7;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.bloco-form h3 {
+  margin-bottom: 10px;
+  font-size: 1em;
+  color: #1b3a6b;
+}
+
+.status-upload {
+  font-size: 0.85em;
+  color: #888;
+  margin-top: 6px;
+}
+
+.preview-capa {
+  max-width: 220px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.editor-botoes {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.editor-botoes button {
+  background-color: #1b3a6b;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.editor-rico {
+  min-height: 200px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 14px;
+  background: white;
+}
+
+.editor-rico img.imagem-inserida {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 10px 0;
+  display: block;
+}
+
+.video-inserido {
+  margin: 10px 0;
+}
+
+.video-inserido iframe,
+.video-inserido video {
+  border-radius: 8px;
+  max-width: 100%;
+}
+
+.card-postada-botoes {
+  display: flex;
+  gap: 8px;
+  padding: 0 20px 16px 20px;
+}
+
+.card-postada-botoes button {
+  flex: 1;
+  padding: 6px 0;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-weight: 600;
+}
+
+.btn-editar-postada {
+  background-color: #1b3a6b;
+}
+
+.btn-excluir-postada {
+  background-color: #b23b3b;
+}
+
+.btn-formato {
+  font-size: 1em;
+  padding: 8px 12px !important;
+}
+
+#seletor-fonte {
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.formato-ativo {
+  background-color: #ffe9a8 !important;
+  color: #1b3a6b !important;
 }
