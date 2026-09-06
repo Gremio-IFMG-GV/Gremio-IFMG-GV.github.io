@@ -26,10 +26,12 @@
     <form id="form-login">
       <input type="email" id="email" placeholder="E-mail" required>
 
-      <div class="campo-senha-wrapper">
-        <input type="password" id="senha" placeholder="Senha" required>
-        <button type="button" id="btn-mostrar-senha" class="btn-olho">👁️</button>
-      </div>
+     <div class="campo-senha-wrapper">
+  <input type="password" id="senha" placeholder="Senha" required>
+  <button type="button" id="btn-mostrar-senha" class="btn-olho">
+    <span id="icone-olho"></span>
+  </button>
+</div>
 
       <label class="manter-login">
         <input type="checkbox" id="manter-login"> Manter login
@@ -139,5 +141,11 @@
   </footer>
 
   <script type="module" src="admin.js"></script>
+  <div id="popup-overlay" class="popup-overlay" style="display:none;">
+  <div class="popup-caixa">
+    <p id="popup-mensagem"></p>
+    <button id="popup-ok">OK</button>
+  </div>
+</div>
 </body>
 </html>
