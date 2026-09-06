@@ -20,17 +20,27 @@
   <main>
 
     <!-- TELA 1: Login -->
-    <section id="login-area">
-      <h2>Painel de Notícias</h2>
-      <form id="form-login">
-        <label for="email">E-mail:</label>
-        <input type="email" id="email" required>
-        <label for="senha">Senha:</label>
-        <input type="password" id="senha" required>
-        <button type="submit">Entrar</button>
-      </form>
-      <p id="erro-login" class="erro"></p>
-    </section>
+    <section id="login-area" class="tela-login">
+  <div class="login-caixa">
+    <h2>Fazer login</h2>
+    <form id="form-login">
+      <input type="email" id="email" placeholder="E-mail" required>
+
+      <div class="campo-senha-wrapper">
+        <input type="password" id="senha" placeholder="Senha" required>
+        <button type="button" id="btn-mostrar-senha" class="btn-olho">👁️</button>
+      </div>
+
+      <label class="manter-login">
+        <input type="checkbox" id="manter-login"> Manter login
+      </label>
+
+      <button type="submit" class="btn-entrar-circular" aria-label="Entrar">&rarr;</button>
+    </form>
+    <p id="erro-login" class="erro"></p>
+    <p class="esqueceu-senha"><a href="#" id="link-esqueceu-senha">Esqueceu a senha?</a></p>
+  </div>
+</section>
 
     <!-- TELA 2: Menu principal -->
     <section id="menu-area" style="display:none;">
