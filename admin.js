@@ -1,9 +1,9 @@
 import { db, auth, firebaseConfig } from "./firebase-config.js";
-import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import {
   collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc,
   query, orderBy, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import {
   signInWithEmailAndPassword, onAuthStateChanged, signOut, getAuth, createUserWithEmailAndPassword,
   setPersistence, browserLocalPersistence, browserSessionPersistence, sendPasswordResetEmail
@@ -16,6 +16,7 @@ const loginArea = document.getElementById("login-area");
 const menuArea = document.getElementById("menu-area");
 const criarArea = document.getElementById("criar-area");
 const postadasArea = document.getElementById("postadas-area");
+const usuarioArea = document.getElementById("usuario-area");
 
 const formLogin = document.getElementById("form-login");
 const erroLogin = document.getElementById("erro-login");
@@ -23,8 +24,10 @@ const btnSair = document.getElementById("btn-sair");
 
 const btnIrCriar = document.getElementById("btn-ir-criar");
 const btnIrPostadas = document.getElementById("btn-ir-postadas");
+const btnIrUsuario = document.getElementById("btn-ir-usuario");
 const btnVoltarCriar = document.getElementById("btn-voltar-criar");
 const btnVoltarPostadas = document.getElementById("btn-voltar-postadas");
+const btnVoltarUsuario = document.getElementById("btn-voltar-usuario");
 
 const formNoticia = document.getElementById("form-noticia");
 const btnSalvar = document.getElementById("btn-salvar");
@@ -43,9 +46,10 @@ const btnFormatoElementos = document.querySelectorAll(".btn-formato");
 
 const listaPostadas = document.getElementById("lista-postadas");
 
-let capaUrlAtual = "";
+const formUsuario = document.getElementById("form-usuario");
+const usuarioStatus = document.getElementById("usuario-status");
 
-const usuarioArea = document.getElementById("usuario-area");
+let capaUrlAtual = "";
 
 function mostrarTela(tela) {
   [menuArea, criarArea, postadasArea, usuarioArea].forEach((secao) => secao.style.display = "none");
@@ -64,8 +68,15 @@ btnIrPostadas.addEventListener("click", () => {
   carregarPostadas();
 });
 
+btnIrUsuario.addEventListener("click", () => {
+  formUsuario.reset();
+  usuarioStatus.textContent = "";
+  mostrarTela(usuarioArea);
+});
+
 btnVoltarCriar.addEventListener("click", () => mostrarTela(menuArea));
 btnVoltarPostadas.addEventListener("click", () => mostrarTela(menuArea));
+btnVoltarUsuario.addEventListener("click", () => mostrarTela(menuArea));
 
 function limparFormulario() {
   formNoticia.reset();
@@ -82,7 +93,7 @@ onAuthStateChanged(auth, (usuario) => {
     mostrarTela(menuArea);
   } else {
     loginArea.style.display = "block";
-    [menuArea, criarArea, postadasArea].forEach((secao) => secao.style.display = "none");
+    [menuArea, criarArea, postadasArea, usuarioArea].forEach((secao) => secao.style.display = "none");
   }
 });
 
@@ -93,8 +104,6 @@ formLogin.addEventListener("submit", async (e) => {
   const manterLogin = document.getElementById("manter-login").checked;
 
   try {
-    // "Manter login" = fica logado mesmo fechando o navegador.
-    // Sem marcar = desloga automaticamente ao fechar a aba.
     await setPersistence(auth, manterLogin ? browserLocalPersistence : browserSessionPersistence);
     await signInWithEmailAndPassword(auth, email, senha);
     erroLogin.textContent = "";
@@ -109,7 +118,7 @@ document.getElementById("btn-mostrar-senha").addEventListener("click", () => {
   campoSenha.type = campoSenha.type === "password" ? "text" : "password";
 });
 
-// Esqueceu a senha: manda e-mail de redefinição de verdade
+// Esqueceu a senha
 document.getElementById("link-esqueceu-senha").addEventListener("click", async (e) => {
   e.preventDefault();
   const email = document.getElementById("email").value;
@@ -125,6 +134,7 @@ document.getElementById("link-esqueceu-senha").addEventListener("click", async (
     erroLogin.textContent = "Não foi possível enviar o e-mail: " + erro.message;
   }
 });
+
 btnSair.addEventListener("click", () => signOut(auth));
 
 async function enviarImagemParaCloudinary(arquivo) {
@@ -162,8 +172,6 @@ function salvarSelecao() {
   }
 }
 
-// NOVO: verifica o que está "ativo" (negrito/itálico/sublinhado/fonte)
-// na posição atual do cursor, e destaca os botões/seletor correspondentes
 function atualizarEstadoBotoes() {
   btnFormatoElementos.forEach((botao) => {
     const ativo = document.queryCommandState(botao.dataset.comando);
@@ -249,7 +257,6 @@ function converterParaEmbed(link) {
   return `<video controls width="100%" src="${link}"></video>`;
 }
 
-// Botões de negrito, itálico e sublinhado
 btnFormatoElementos.forEach((botao) => {
   botao.addEventListener("mousedown", (e) => {
     e.preventDefault();
@@ -258,7 +265,6 @@ btnFormatoElementos.forEach((botao) => {
   });
 });
 
-// Trocar a fonte do trecho selecionado
 seletorFonte.addEventListener("mousedown", () => salvarSelecao());
 seletorFonte.addEventListener("change", (e) => {
   const fonte = e.target.value;
@@ -359,18 +365,6 @@ function formatarData(timestamp) {
   const data = timestamp.toDate();
   return data.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
 }
-// --- NOVO: Criar usuário sem perder a própria sessão ---
-const btnIrUsuario = document.getElementById("btn-ir-usuario");
-const btnVoltarUsuario = document.getElementById("btn-voltar-usuario");
-const formUsuario = document.getElementById("form-usuario");
-const usuarioStatus = document.getElementById("usuario-status");
-
-btnIrUsuario.addEventListener("click", () => {
-  formUsuario.reset();
-  usuarioStatus.textContent = "";
-  mostrarTela(usuarioArea);
-});
-btnVoltarUsuario.addEventListener("click", () => mostrarTela(menuArea));
 
 formUsuario.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -379,7 +373,6 @@ formUsuario.addEventListener("submit", async (e) => {
 
   usuarioStatus.textContent = "Criando conta...";
 
-  // Cria um "app" separado, só pra essa criação, pra não afetar seu login atual
   const appSecundario = initializeApp(firebaseConfig, "secundario-" + Date.now());
   const authSecundario = getAuth(appSecundario);
 
