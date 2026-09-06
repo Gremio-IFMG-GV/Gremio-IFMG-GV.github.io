@@ -738,3 +738,96 @@ header nav a:hover {
   cursor: pointer;
   font-weight: 600;
 }
+.tela-login {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-caixa {
+  background: white;
+  border-radius: 24px;
+  padding: 40px 32px;
+  max-width: 340px;
+  width: 100%;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+  text-align: center;
+}
+
+.login-caixa h2 {
+  margin-bottom: 24px;
+}
+
+.login-caixa form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.login-caixa input[type="email"],
+.login-caixa input[type="password"] {
+  background-color: #f2f2f2;
+  border: none;
+  border-radius: 24px;
+  padding: 14px 20px;
+  font-size: 0.95em;
+}
+
+.campo-senha-wrapper {
+  position: relative;
+}
+
+.campo-senha-wrapper input {
+  width: 100%;
+}
+
+.btn-olho {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.manter-login {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85em;
+  color: #666;
+  text-align: left;
+}
+
+.btn-entrar-circular {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  background-color: #eef1f6;
+  color: #1b3a6b;
+  font-size: 1.4em;
+  cursor: pointer;
+  margin: 10px auto 0 auto;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.btn-entrar-circular:hover {
+  background-color: #1b3a6b;
+  color: white;
+  box-shadow: 0 0 14px rgba(27, 58, 107, 0.4);
+}
+
+.esqueceu-senha {
+  margin-top: 16px;
+  font-size: 0.85em;
+}
+
+.esqueceu-senha a {
+  color: #1b3a6b;
+  text-decoration: none;
+}
