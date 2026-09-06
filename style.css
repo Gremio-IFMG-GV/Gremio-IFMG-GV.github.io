@@ -670,3 +670,13 @@ header nav a:hover {
   border-radius: 8px;
   margin: 12px 0;
 }
+.btn-formato {
+  font-size: 1em;
+  padding: 8px 12px !important;
+}
+
+#seletor-fonte {
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
