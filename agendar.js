@@ -3,8 +3,6 @@ import {
   collection, addDoc, getDocs, query, where, serverTimestamp, Timestamp
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
-// Mostra o pop-up centralizado. Se "redirecionarParaHome" for true,
-// ao clicar OK a pessoa vai pra página inicial.
 function mostrarPopup(mensagem, redirecionarParaHome) {
   const overlay = document.getElementById("popup-overlay");
   const texto = document.getElementById("popup-mensagem");
@@ -15,20 +13,19 @@ function mostrarPopup(mensagem, redirecionarParaHome) {
 
   botaoOk.onclick = function () {
     overlay.style.display = "none";
-    if (redirecionarParaHome) {
-      window.location.href = "index.html";
-    }
+    if (redirecionarParaHome) window.location.href = "index.html";
   };
 }
 
 emailjs.init("Y2p4-JQhyVwsirKI7");
 
 const EMAILS_DESTINO = [
-  "0117389@academico.ifmg.edu.br"
+  "seuemail@exemplo.com"
 ];
 
 const form = document.querySelector("form[data-atividade]");
 const atividade = form.dataset.atividade;
+const campoTabuleiro = form.querySelector("[name=tabuleiro]");
 
 function calcularExpiraEm(diaTexto, horarioTexto) {
   const [dia, mes, ano] = diaTexto.split("/").map(Number);
@@ -44,18 +41,23 @@ form.addEventListener("submit", async (e) => {
   const curso = form.querySelector("[name=curso]").value;
   const dia = document.getElementById("data-selecionada").value;
   const horario = form.querySelector("[name=horario]").value;
+  const tabuleiro = campoTabuleiro ? campoTabuleiro.value : null;
 
   if (!dia) {
     mostrarPopup("Escolha um dia no calendário antes de agendar.", false);
     return;
   }
 
-  const q = query(
-    collection(db, "agendamentos"),
+  // Monta a checagem de conflito: se tiver tabuleiro, checa o tabuleiro específico;
+  // se não (sinuca/ping-pong), checa só dia+horário mesmo
+  const condicoes = [
     where("atividade", "==", atividade),
     where("dia", "==", dia),
     where("horario", "==", horario)
-  );
+  ];
+  if (tabuleiro) condicoes.push(where("tabuleiro", "==", tabuleiro));
+
+  const q = query(collection(db, "agendamentos"), ...condicoes);
   const jaExiste = await getDocs(q);
 
   if (!jaExiste.empty) {
@@ -63,16 +65,14 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
-  await addDoc(collection(db, "agendamentos"), {
-    nome: nome,
-    ano: ano,
-    curso: curso,
-    dia: dia,
-    horario: horario,
-    atividade: atividade,
+  const dadosAgendamento = {
+    nome, ano, curso, dia, horario, atividade,
     criadoEm: serverTimestamp(),
     expiraEm: Timestamp.fromDate(calcularExpiraEm(dia, horario))
-  });
+  };
+  if (tabuleiro) dadosAgendamento.tabuleiro = tabuleiro;
+
+  await addDoc(collection(db, "agendamentos"), dadosAgendamento);
 
   EMAILS_DESTINO.forEach(function (email) {
     emailjs.send("service_irheu35", "template_war4di4", {
@@ -82,7 +82,8 @@ form.addEventListener("submit", async (e) => {
       curso: curso,
       atividade: atividade,
       dia: dia,
-      horario: horario
+      horario: horario,
+      tabuleiro: tabuleiro || ""
     });
   });
 
