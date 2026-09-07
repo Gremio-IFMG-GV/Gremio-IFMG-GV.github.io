@@ -548,7 +548,7 @@ header nav a:hover {
 }
 
 /* ===== Painel de notícias: menu, formulários, editor ===== */
-#painel-area, #usuario-area {
+#painel-area, #usuario-area, #perfil-area {
   max-width: 500px;
   margin: 40px auto;
   background: white;
