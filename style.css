@@ -820,8 +820,12 @@ header nav a:hover {
 }
 
 #filtro-ordem {
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background-color: #eef1f6;
+  color: #1b3a6b;
   font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
 }
