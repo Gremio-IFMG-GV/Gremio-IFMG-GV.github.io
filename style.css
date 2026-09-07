@@ -829,3 +829,36 @@ header nav a:hover {
   font-weight: 600;
   cursor: pointer;
 }
+.pagina-404 {
+  min-height: 65vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.ilustracao-404 {
+  width: 100%;
+  max-width: 380px;
+  margin-bottom: 10px;
+}
+
+.titulo-404 {
+  font-size: 3em;
+  color: #1b3a6b;
+}
+
+.texto-404 {
+  color: #555;
+  margin: 12px 0 24px 0;
+  max-width: 400px;
+}
+
+.links-404 {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
