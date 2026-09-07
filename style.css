@@ -556,14 +556,15 @@ header nav a:hover {
   padding: 24px;
 }
 
-#form-login, #form-noticia, #form-usuario {
+#form-login, #form-noticia, #form-usuario, #form-perfil {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
 #form-noticia input, #form-noticia select, #form-noticia textarea, #form-noticia button,
-#form-usuario input, #form-usuario button {
+#form-usuario input, #form-usuario button,
+#form-perfil input, #form-perfil button {
   padding: 8px;
   border-radius: 6px;
   border: 1px solid #ccc;
@@ -573,7 +574,7 @@ header nav a:hover {
   min-height: 80px;
 }
 
-#form-noticia button, #form-usuario button {
+#form-noticia button, #form-usuario button, #form-perfil button {
   background-color: #1b3a6b;
   color: white;
   border: none;
