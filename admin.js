@@ -70,7 +70,7 @@ let capaUrlAtual = "";
 
 // --- Navegação entre telas ---
 function mostrarTela(tela) {
-  [menuArea, criarArea, postadasArea, usuarioArea, document.getElementById("perfil-area")].forEach((secao) => secao.style.display = "none");
+  [menuArea, criarArea, postadasArea, usuarioArea, document.getElementById("perfil-area"), document.getElementById("imagens-area")].forEach((secao) => secao.style.display = "none");
   tela.style.display = "block";
 }
 
@@ -488,4 +488,60 @@ formPerfil.addEventListener("submit", async (e) => {
   } catch (erro) {
     perfilStatus.textContent = "Erro: " + erro.message;
   }
+});
+// --- Imagens do Agendamento ---
+import { setDoc, getDoc as getDocConfig } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+const btnIrImagens = document.getElementById("btn-ir-imagens");
+const btnVoltarImagens = document.getElementById("btn-voltar-imagens");
+const btnSalvarImagens = document.getElementById("btn-salvar-imagens");
+const imagensStatus = document.getElementById("imagens-status");
+
+const atividadesImagem = ["sinuca", "xadrez", "pingpong"];
+const urlsImagensAtuais = {};
+
+btnIrImagens.addEventListener("click", async () => {
+  imagensStatus.textContent = "Carregando...";
+  mostrarTela(document.getElementById("imagens-area"));
+
+  const referencia = doc(db, "configuracoes", "imagens-agendamento");
+  const snap = await getDocConfig(referencia);
+  const dados = snap.exists() ? snap.data() : {};
+
+  atividadesImagem.forEach((atividade) => {
+    const url = dados[atividade];
+    urlsImagensAtuais[atividade] = url || "";
+    const preview = document.getElementById(`imagem-${atividade}-preview`);
+    if (url) {
+      preview.src = url;
+      preview.style.display = "block";
+    }
+  });
+
+  imagensStatus.textContent = "";
+});
+
+btnVoltarImagens.addEventListener("click", () => mostrarTela(menuArea));
+
+atividadesImagem.forEach((atividade) => {
+  document.getElementById(`imagem-${atividade}-arquivo`).addEventListener("change", async (e) => {
+    const arquivo = e.target.files[0];
+    if (!arquivo) return;
+
+    imagensStatus.textContent = `Enviando imagem (${atividade})...`;
+    const url = await enviarImagemParaCloudinary(arquivo);
+    urlsImagensAtuais[atividade] = url;
+
+    const preview = document.getElementById(`imagem-${atividade}-preview`);
+    preview.src = url;
+    preview.style.display = "block";
+    imagensStatus.textContent = "Imagem pronta (não esqueça de clicar em Salvar).";
+  });
+});
+
+btnSalvarImagens.addEventListener("click", async () => {
+  imagensStatus.textContent = "Salvando...";
+  const referencia = doc(db, "configuracoes", "imagens-agendamento");
+  await setDoc(referencia, urlsImagensAtuais, { merge: true });
+  imagensStatus.textContent = "Imagens salvas com sucesso!";
 });
