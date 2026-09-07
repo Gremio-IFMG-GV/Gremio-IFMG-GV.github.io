@@ -743,3 +743,8 @@ header nav a:hover {
   background-color: #ffe9a8 !important;
   color: #1b3a6b !important;
 }
+.popup-caixa .popup-botoes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
