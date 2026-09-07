@@ -8,11 +8,15 @@ import {
   signInWithEmailAndPassword, onAuthStateChanged, signOut, getAuth, createUserWithEmailAndPassword,
   setPersistence, browserLocalPersistence, browserSessionPersistence, sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+const CLOUDINARY_CLOUD_NAME = "bkwfwviq";
+const CLOUDINARY_UPLOAD_PRESET = "Site-IFMG";
+
 // Ícones de olho (SVG simples, sem emoji)
 const ICONE_OLHO_ABERTO = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>';
 const ICONE_OLHO_FECHADO = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a21.6 21.6 0 0 1 5.06-6.06M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 7 11 7a21.6 21.6 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
 
-// Pop-up centralizado, reaproveitado no admin
+// Pop-up centralizado, reaproveitado no admin (mensagens de aviso/sucesso)
 function mostrarPopupAdmin(mensagem) {
   const overlay = document.getElementById("popup-overlay");
   const texto = document.getElementById("popup-mensagem");
@@ -23,9 +27,7 @@ function mostrarPopupAdmin(mensagem) {
   botaoOk.onclick = () => overlay.style.display = "none";
 }
 
-const CLOUDINARY_CLOUD_NAME = "bkwfwviq";
-const CLOUDINARY_UPLOAD_PRESET = "Site-IFMG";
-
+// --- Elementos da tela ---
 const loginArea = document.getElementById("login-area");
 const menuArea = document.getElementById("menu-area");
 const criarArea = document.getElementById("criar-area");
@@ -55,6 +57,7 @@ const editorConteudo = document.getElementById("editor-conteudo");
 const btnInserirImagem = document.getElementById("btn-inserir-imagem");
 const btnInserirVideo = document.getElementById("btn-inserir-video");
 const inputImagemConteudo = document.getElementById("input-imagem-conteudo");
+const inputVideoConteudo = document.getElementById("input-video-conteudo");
 const seletorFonte = document.getElementById("seletor-fonte");
 const btnFormatoElementos = document.querySelectorAll(".btn-formato");
 
@@ -65,6 +68,7 @@ const usuarioStatus = document.getElementById("usuario-status");
 
 let capaUrlAtual = "";
 
+// --- Navegação entre telas ---
 function mostrarTela(tela) {
   [menuArea, criarArea, postadasArea, usuarioArea].forEach((secao) => secao.style.display = "none");
   tela.style.display = "block";
@@ -101,6 +105,7 @@ function limparFormulario() {
   capaStatus.textContent = "";
 }
 
+// --- Login ---
 onAuthStateChanged(auth, (usuario) => {
   if (usuario) {
     loginArea.style.display = "none";
@@ -145,17 +150,18 @@ document.getElementById("link-esqueceu-senha").addEventListener("click", async (
     erroLogin.textContent = "Digite seu e-mail no campo acima primeiro.";
     return;
   }
- try {
-  await sendPasswordResetEmail(auth, email);
-  erroLogin.textContent = "";
-  mostrarPopupAdmin("E-mail de redefinição enviado! Confira sua caixa de entrada (e o spam).");
-} catch (erro) {
-  erroLogin.textContent = "Não foi possível enviar o e-mail: " + erro.message;
-}
+  try {
+    await sendPasswordResetEmail(auth, email);
+    erroLogin.textContent = "";
+    mostrarPopupAdmin("E-mail de redefinição enviado! Confira sua caixa de entrada (e o spam).");
+  } catch (erro) {
+    erroLogin.textContent = "Não foi possível enviar o e-mail: " + erro.message;
+  }
 });
 
 btnSair.addEventListener("click", () => signOut(auth));
 
+// --- Upload no Cloudinary (imagem e vídeo) ---
 async function enviarImagemParaCloudinary(arquivo) {
   const dadosForm = new FormData();
   dadosForm.append("file", arquivo);
@@ -169,6 +175,20 @@ async function enviarImagemParaCloudinary(arquivo) {
   return dados.secure_url;
 }
 
+async function enviarVideoParaCloudinary(arquivo) {
+  const dadosForm = new FormData();
+  dadosForm.append("file", arquivo);
+  dadosForm.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+  const resposta = await fetch(
+    `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`,
+    { method: "POST", body: dadosForm }
+  );
+  const dados = await resposta.json();
+  return dados.secure_url;
+}
+
+// --- Upload da capa ---
 capaArquivo.addEventListener("change", async () => {
   const arquivo = capaArquivo.files[0];
   if (!arquivo) return;
@@ -182,6 +202,7 @@ capaArquivo.addEventListener("change", async () => {
   capaStatus.textContent = "Imagem enviada!";
 });
 
+// --- Inserir conteúdo no editor rico, na posição do cursor ---
 let ultimaSelecaoRange = null;
 
 function salvarSelecao() {
@@ -237,6 +258,7 @@ function inserirNoEditor(node) {
   salvarSelecao();
 }
 
+// --- Inserir imagem ---
 btnInserirImagem.addEventListener("click", () => {
   salvarSelecao();
   inputImagemConteudo.click();
@@ -255,8 +277,14 @@ inputImagemConteudo.addEventListener("change", async () => {
   inputImagemConteudo.value = "";
 });
 
+// --- Inserir vídeo (link ou arquivo, via pop-up de escolha) ---
 btnInserirVideo.addEventListener("click", () => {
   salvarSelecao();
+  document.getElementById("popup-video-overlay").style.display = "flex";
+});
+
+document.getElementById("popup-video-link").addEventListener("click", () => {
+  document.getElementById("popup-video-overlay").style.display = "none";
   const link = prompt("Cole o link do vídeo (YouTube ou link direto de um arquivo de vídeo):");
   if (!link) return;
 
@@ -265,6 +293,25 @@ btnInserirVideo.addEventListener("click", () => {
   wrapper.contentEditable = "false";
   wrapper.innerHTML = converterParaEmbed(link);
   inserirNoEditor(wrapper);
+});
+
+document.getElementById("popup-video-arquivo").addEventListener("click", () => {
+  document.getElementById("popup-video-overlay").style.display = "none";
+  inputVideoConteudo.click();
+});
+
+inputVideoConteudo.addEventListener("change", async (e) => {
+  const arquivo = e.target.files[0];
+  if (!arquivo) return;
+
+  const url = await enviarVideoParaCloudinary(arquivo);
+  const wrapper = document.createElement("div");
+  wrapper.className = "video-inserido";
+  wrapper.contentEditable = "false";
+  wrapper.innerHTML = `<video controls width="100%" src="${url}"></video>`;
+  inserirNoEditor(wrapper);
+
+  e.target.value = "";
 });
 
 function converterParaEmbed(link) {
@@ -276,6 +323,7 @@ function converterParaEmbed(link) {
   return `<video controls width="100%" src="${link}"></video>`;
 }
 
+// --- Botões de negrito, itálico e sublinhado ---
 btnFormatoElementos.forEach((botao) => {
   botao.addEventListener("mousedown", (e) => {
     e.preventDefault();
@@ -284,6 +332,7 @@ btnFormatoElementos.forEach((botao) => {
   });
 });
 
+// --- Trocar a fonte do trecho selecionado ---
 seletorFonte.addEventListener("mousedown", () => salvarSelecao());
 seletorFonte.addEventListener("change", (e) => {
   const fonte = e.target.value;
@@ -300,11 +349,12 @@ seletorFonte.addEventListener("change", (e) => {
   atualizarEstadoBotoes();
 });
 
+// --- Publicar ou editar notícia (com autor e data de atualização) ---
 formNoticia.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   if (!capaUrlAtual) {
-    alert("Escolha uma imagem de capa antes de publicar.");
+    mostrarPopupAdmin("Escolha uma imagem de capa antes de publicar.");
     return;
   }
 
@@ -318,16 +368,20 @@ formNoticia.addEventListener("submit", async (e) => {
   };
 
   if (id) {
+    dadosNoticia.atualizadoEm = serverTimestamp();
+    dadosNoticia.autorAtualizacao = auth.currentUser.email;
     await updateDoc(doc(db, "noticias", id), dadosNoticia);
   } else {
     dadosNoticia.criadoEm = serverTimestamp();
+    dadosNoticia.autorCriacao = auth.currentUser.email;
     await addDoc(collection(db, "noticias"), dadosNoticia);
   }
 
-  alert("Notícia salva com sucesso!");
+  mostrarPopupAdmin("Notícia salva com sucesso!");
   mostrarTela(menuArea);
 });
 
+// --- Notícias Postadas ---
 async function carregarPostadas() {
   listaPostadas.innerHTML = "Carregando...";
 
@@ -382,9 +436,12 @@ async function carregarPostadas() {
 function formatarData(timestamp) {
   if (!timestamp) return "publicando...";
   const data = timestamp.toDate();
-  return data.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+  const dataFormatada = data.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+  const horaFormatada = data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  return `${dataFormatada} às ${horaFormatada}`;
 }
 
+// --- Criar Usuário (sem perder a própria sessão) ---
 formUsuario.addEventListener("submit", async (e) => {
   e.preventDefault();
   const email = document.getElementById("novo-email").value;
