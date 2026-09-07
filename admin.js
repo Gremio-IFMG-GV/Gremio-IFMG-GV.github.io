@@ -106,7 +106,7 @@ onAuthStateChanged(auth, (usuario) => {
     loginArea.style.display = "none";
     mostrarTela(menuArea);
   } else {
-    loginArea.style.display = "block";
+    loginArea.style.display = "flex";
     [menuArea, criarArea, postadasArea, usuarioArea].forEach((secao) => secao.style.display = "none");
   }
 });
