@@ -22,13 +22,24 @@
 
 <h2>Notícias</h2>
 
-<div class="filtros-noticias">
-  <input type="text" id="busca-noticia" placeholder="Buscar por título ou resumo...">
+<div class="barra-busca">
+  <input type="text" id="busca-noticia" placeholder="Buscar notícias...">
+  <button type="button" id="btn-toggle-filtros" class="btn-filtro-toggle">Filtros &#9662;</button>
+</div>
 
+<div id="painel-filtros" class="painel-filtros" style="display:none;">
   <div class="filtro-data">
     <label>De: <input type="date" id="filtro-data-de"></label>
     <label>Até: <input type="date" id="filtro-data-ate"></label>
   </div>
+
+  <select id="filtro-ordem">
+    <option value="recentes">Mais recentes</option>
+    <option value="antigas">Mais antigas</option>
+  </select>
+
+  <button type="button" id="btn-limpar-filtros" class="botao-suave">Limpar filtros</button>
+</div>
 
   <select id="filtro-ordem">
     <option value="recentes">Mais recentes</option>
