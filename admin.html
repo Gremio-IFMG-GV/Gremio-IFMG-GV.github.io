@@ -50,7 +50,7 @@
         <h2>Painel de Notícias</h2>
         <button id="btn-sair">Logout</button>
       </div>
-     <div class="menu-opcoes">
+  <div class="menu-opcoes">
   <button type="button" id="btn-ir-criar" class="menu-card">
     <span class="menu-card-icone">📝</span>
     <span>Criar Notícia</span>
@@ -66,6 +66,10 @@
   <button type="button" id="btn-ir-perfil" class="menu-card">
     <span class="menu-card-icone">🪪</span>
     <span>Meu Perfil</span>
+  </button>
+  <button type="button" id="btn-ir-imagens" class="menu-card">
+    <span class="menu-card-icone">🖼️</span>
+    <span>Imagens do Agendamento</span>
   </button>
 </div>
     </section>
@@ -150,6 +154,31 @@
     <button type="submit">Salvar nome</button>
   </form>
   <p id="perfil-status" class="status-upload"></p>
+</section>
+    <section id="imagens-area" style="display:none;">
+  <button type="button" id="btn-voltar-imagens" class="botao-voltar-painel">&larr; Voltar ao menu</button>
+  <h2>Imagens do Agendamento</h2>
+
+  <div class="bloco-form">
+    <h3>Mesa de Sinuca</h3>
+    <input type="file" id="imagem-sinuca-arquivo" accept="image/*">
+    <img id="imagem-sinuca-preview" class="preview-capa" style="display:none;">
+  </div>
+
+  <div class="bloco-form">
+    <h3>Tabuleiro de Xadrez</h3>
+    <input type="file" id="imagem-xadrez-arquivo" accept="image/*">
+    <img id="imagem-xadrez-preview" class="preview-capa" style="display:none;">
+  </div>
+
+  <div class="bloco-form">
+    <h3>Tênis de Mesa</h3>
+    <input type="file" id="imagem-pingpong-arquivo" accept="image/*">
+    <img id="imagem-pingpong-preview" class="preview-capa" style="display:none;">
+  </div>
+
+  <button type="button" id="btn-salvar-imagens">Salvar imagens</button>
+  <p id="imagens-status" class="status-upload"></p>
 </section>
   </main>
 
