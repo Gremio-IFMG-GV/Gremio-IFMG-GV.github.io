@@ -763,21 +763,46 @@ header nav a:hover {
   color: #888;
   margin-top: 4px;
 }
-.filtros-noticias {
+.barra-busca {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 24px;
+  padding: 6px 6px 6px 20px;
+  margin: 0 40px 12px 40px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.barra-busca input[type="text"] {
+  flex: 1;
+  border: none;
+  padding: 10px 0;
+  font-family: inherit;
+  font-size: 0.95em;
+  outline: none;
+}
+
+.btn-filtro-toggle {
+  background-color: #1b3a6b;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.painel-filtros {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   align-items: center;
-  padding: 0 40px 20px 40px;
-}
-
-.filtros-noticias input[type="text"] {
-  flex: 1;
-  min-width: 200px;
-  padding: 10px 16px;
-  border-radius: 24px;
-  border: 1px solid #ccc;
-  font-family: inherit;
+  background: white;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 0 40px 20px 40px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
 
 .filtro-data {
