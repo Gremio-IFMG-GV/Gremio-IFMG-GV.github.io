@@ -23,16 +23,19 @@ async function carregarTodas() {
 
   aplicarFiltros();
 }
-
+// Remove acentos pra comparação (ex: "notícia" e "noticia" batem igual)
+function normalizar(texto) {
+  return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
 function aplicarFiltros() {
-  const textoBusca = campoBusca.value.trim().toLowerCase();
+  const textoBusca = normalizar(campoBusca.value.trim());
   const dataDe = campoDataDe.value ? new Date(campoDataDe.value + "T00:00:00") : null;
   const dataAte = campoDataAte.value ? new Date(campoDataAte.value + "T23:59:59") : null;
 
   let filtradas = todasAsNoticias.filter((noticia) => {
-    const bateBusca = !textoBusca ||
-      noticia.titulo.toLowerCase().includes(textoBusca) ||
-      noticia.resumo.toLowerCase().includes(textoBusca);
+   const bateBusca = !textoBusca ||
+  normalizar(noticia.titulo).includes(textoBusca) ||
+  normalizar(noticia.resumo).includes(textoBusca);
 
     const dataNoticia = noticia.criadoEm ? noticia.criadoEm.toDate() : null;
     const bateDataDe = !dataDe || (dataNoticia && dataNoticia >= dataDe);
