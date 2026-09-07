@@ -91,6 +91,10 @@ btnLimpar.addEventListener("click", () => {
   campoDataDe.value = "";
   campoDataAte.value = "";
   campoOrdem.value = "recentes";
+  document.getElementById("btn-toggle-filtros").addEventListener("click", () => {
+  const painel = document.getElementById("painel-filtros");
+  painel.style.display = painel.style.display === "none" ? "flex" : "none";
+});
   aplicarFiltros();
 });
 
