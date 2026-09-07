@@ -6,7 +6,7 @@ import {
 import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import {
   signInWithEmailAndPassword, onAuthStateChanged, signOut, getAuth, createUserWithEmailAndPassword,
-  setPersistence, browserLocalPersistence, browserSessionPersistence, sendPasswordResetEmail
+  setPersistence, browserLocalPersistence, browserSessionPersistence, sendPasswordResetEmail, updateProfile
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
 const CLOUDINARY_CLOUD_NAME = "bkwfwviq";
@@ -70,7 +70,7 @@ let capaUrlAtual = "";
 
 // --- Navegação entre telas ---
 function mostrarTela(tela) {
-  [menuArea, criarArea, postadasArea, usuarioArea].forEach((secao) => secao.style.display = "none");
+  [menuArea, criarArea, postadasArea, usuarioArea, document.getElementById("perfil-area")].forEach((secao) => secao.style.display = "none");
   tela.style.display = "block";
 }
 
@@ -369,11 +369,11 @@ formNoticia.addEventListener("submit", async (e) => {
 
   if (id) {
     dadosNoticia.atualizadoEm = serverTimestamp();
-    dadosNoticia.autorAtualizacao = auth.currentUser.email;
+    dadosNoticia.autorAtualizacao = auth.currentUser.displayName || auth.currentUser.email;
     await updateDoc(doc(db, "noticias", id), dadosNoticia);
   } else {
     dadosNoticia.criadoEm = serverTimestamp();
-    dadosNoticia.autorCriacao = auth.currentUser.email;
+    dadosNoticia.autorCriacao = auth.currentUser.displayName || auth.currentUser.email;
     await addDoc(collection(db, "noticias"), dadosNoticia);
   }
 
@@ -444,6 +444,7 @@ function formatarData(timestamp) {
 // --- Criar Usuário (sem perder a própria sessão) ---
 formUsuario.addEventListener("submit", async (e) => {
   e.preventDefault();
+  const nome = document.getElementById("novo-nome").value;
   const email = document.getElementById("novo-email").value;
   const senha = document.getElementById("nova-senha").value;
 
@@ -453,12 +454,38 @@ formUsuario.addEventListener("submit", async (e) => {
   const authSecundario = getAuth(appSecundario);
 
   try {
-    await createUserWithEmailAndPassword(authSecundario, email, senha);
+    const credencial = await createUserWithEmailAndPassword(authSecundario, email, senha);
+    await updateProfile(credencial.user, { displayName: nome });
     usuarioStatus.textContent = "Usuário criado com sucesso!";
     formUsuario.reset();
   } catch (erro) {
     usuarioStatus.textContent = "Erro ao criar usuário: " + erro.message;
   } finally {
     await deleteApp(appSecundario);
+  }
+});
+// --- Meu Perfil ---
+const btnIrPerfil = document.getElementById("btn-ir-perfil");
+const btnVoltarPerfil = document.getElementById("btn-voltar-perfil");
+const formPerfil = document.getElementById("form-perfil");
+const perfilNome = document.getElementById("perfil-nome");
+const perfilStatus = document.getElementById("perfil-status");
+
+btnIrPerfil.addEventListener("click", () => {
+  perfilNome.value = auth.currentUser.displayName || "";
+  perfilStatus.textContent = "";
+  mostrarTela(document.getElementById("perfil-area"));
+});
+
+btnVoltarPerfil.addEventListener("click", () => mostrarTela(menuArea));
+
+formPerfil.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  perfilStatus.textContent = "Salvando...";
+  try {
+    await updateProfile(auth.currentUser, { displayName: perfilNome.value });
+    perfilStatus.textContent = "Nome atualizado com sucesso!";
+  } catch (erro) {
+    perfilStatus.textContent = "Erro: " + erro.message;
   }
 });
