@@ -79,16 +79,6 @@ header nav a:hover {
   margin-bottom: 20px;
 }
 
-.noticias-grid {
-  display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
-}
-
-.noticias-grid .noticia-card {
-  max-width: 380px;
-}
-
 .ver-todas {
   margin-top: 24px;
   text-align: center;
@@ -100,16 +90,44 @@ header nav a:hover {
   text-decoration: none;
 }
 
+/* ===== Grade de notícias (home e página Notícias) ===== */
+.noticias-grid,
+.noticias-lista {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.noticias-lista {
+  padding: 24px 40px 40px 40px;
+}
+
+@media (max-width: 900px) {
+  .noticias-grid, .noticias-lista {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .noticias-grid, .noticias-lista {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ===== Cartão de notícia (reutilizado em vários lugares) ===== */
 .noticia-card {
   background: white;
   border-radius: 12px;
   overflow: hidden;
-  flex: 1;
-  min-width: 260px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
   display: flex;
   flex-direction: column;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.noticia-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.18);
 }
 
 .noticia-card a {
@@ -149,19 +167,6 @@ header nav a:hover {
 /* ===== Lista de notícias (página Notícias) ===== */
 .titulo-pagina {
   padding: 40px 40px 0 40px;
-}
-
-.noticias-lista {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 24px 40px 40px 40px;
-}
-
-.noticias-lista .noticia-card {
-  max-width: 700px;
-  margin: 0 auto;
-  width: 100%;
 }
 
 /* ===== Página individual de notícia ===== */
@@ -444,6 +449,12 @@ header nav a:hover {
   background-color: #24498a;
 }
 
+.popup-caixa .popup-botoes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 /* ===== Painel de notícias: login ===== */
 .tela-login {
   min-height: 70vh;
@@ -489,7 +500,7 @@ header nav a:hover {
 
 .campo-senha-wrapper input {
   width: 100%;
-  padding-right: 48px; /* espaço pra não o texto ficar embaixo do ícone */
+  padding-right: 48px;
 }
 
 #form-login button.btn-olho {
@@ -746,11 +757,7 @@ header nav a:hover {
   background-color: #ffe9a8 !important;
   color: #1b3a6b !important;
 }
-.popup-caixa .popup-botoes {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+
 .info-autoria {
   font-size: 0.85em;
   color: #888;
