@@ -63,6 +63,10 @@
     <span class="menu-card-icone">👤</span>
     <span>Criar Usuário</span>
   </button>
+  <button type="button" id="btn-ir-perfil" class="menu-card">
+    <span class="menu-card-icone">🪪</span>
+    <span>Meu Perfil</span>
+  </button>
 </div>
     </section>
 
@@ -124,15 +128,28 @@
   <button type="button" id="btn-voltar-usuario" class="botao-voltar-painel">&larr; Voltar ao menu</button>
   <h2>Criar Usuário</h2>
   <form id="form-usuario">
-    <label for="novo-email">E-mail do novo usuário:</label>
-    <input type="email" id="novo-email" required>
+  <label for="novo-nome">Nome de exibição (aparece nas notícias):</label>
+  <input type="text" id="novo-nome" required>
 
-    <label for="nova-senha">Senha (mínimo 6 caracteres):</label>
-    <input type="password" id="nova-senha" minlength="6" required>
+  <label for="novo-email">E-mail do novo usuário:</label>
+  <input type="email" id="novo-email" required>
 
-    <button type="submit">Criar conta</button>
-  </form>
+  <label for="nova-senha">Senha (mínimo 6 caracteres):</label>
+  <input type="password" id="nova-senha" minlength="6" required>
+
+  <button type="submit">Criar conta</button>
+</form>
   <p id="usuario-status" class="status-upload"></p>
+</section>
+    <section id="perfil-area" style="display:none;">
+  <button type="button" id="btn-voltar-perfil" class="botao-voltar-painel">&larr; Voltar ao menu</button>
+  <h2>Meu Perfil</h2>
+  <form id="form-perfil">
+    <label for="perfil-nome">Nome de exibição (aparece nas notícias que você postar):</label>
+    <input type="text" id="perfil-nome" required>
+    <button type="submit">Salvar nome</button>
+  </form>
+  <p id="perfil-status" class="status-upload"></p>
 </section>
   </main>
 
