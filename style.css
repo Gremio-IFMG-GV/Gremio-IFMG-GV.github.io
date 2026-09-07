@@ -548,7 +548,7 @@ header nav a:hover {
 }
 
 /* ===== Painel de notícias: menu, formulários, editor ===== */
-#painel-area, #usuario-area, #perfil-area {
+#painel-area, #usuario-area, #perfil-area, #imagens-area {
   max-width: 500px;
   margin: 40px auto;
   background: white;
@@ -574,10 +574,12 @@ header nav a:hover {
   min-height: 80px;
 }
 
-#form-noticia button, #form-usuario button, #form-perfil button {
+#form-noticia button, #form-usuario button, #form-perfil button, #btn-salvar-imagens {
   background-color: #1b3a6b;
   color: white;
   border: none;
+  padding: 8px;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
 }
