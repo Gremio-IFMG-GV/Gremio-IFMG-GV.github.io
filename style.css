@@ -748,3 +748,8 @@ header nav a:hover {
   flex-direction: column;
   gap: 10px;
 }
+.info-autoria {
+  font-size: 0.85em;
+  color: #888;
+  margin-top: 4px;
+}
