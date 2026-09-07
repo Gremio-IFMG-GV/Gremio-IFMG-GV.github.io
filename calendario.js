@@ -4,50 +4,39 @@ import { collection, getDocs, query, where } from "https://www.gstatic.com/fireb
 const form = document.querySelector("form[data-atividade]");
 const atividade = form.dataset.atividade;
 const selectHorario = form.querySelector("[name=horario]");
+const selectTabuleiro = form.querySelector("[name=tabuleiro]"); // só existe no xadrez
 
 const TODOS_HORARIOS = ["13h-14h", "14h-15h", "15h-16h"];
 
-// Feriados nacionais fixos + feriados de Governador Valadares (2026).
-// Pra adicionar um feriado móvel (Carnaval, Sexta-feira Santa, Corpus Christi)
-// ou um recesso do IFMG, é só acrescentar uma linha nova, no formato "dd/mm/aaaa".
+// Quantas pessoas cabem no MESMO horário: xadrez tem 4 tabuleiros,
+// sinuca e ping-pong têm 1 unidade só.
+const CAPACIDADE = atividade === "xadrez" ? 4 : 1;
+
 const FERIADOS = [
-  "01/01/2026", // Confraternização Universal
-  "30/01/2026", // Aniversário de Governador Valadares
-  "21/04/2026", // Tiradentes
-  "01/05/2026", // Dia do Trabalho
-  "13/06/2026", // Padroeiro de Governador Valadares (Santo Antônio)
-  "07/09/2026", // Independência do Brasil
-  "12/10/2026", // Nossa Senhora Aparecida
-  "02/11/2026", // Finados
-  "15/11/2026", // Proclamação da República
-  "20/11/2026", // Consciência Negra
-  "25/12/2026"  // Natal
+  "01/01/2026", "30/01/2026", "21/04/2026", "01/05/2026", "13/06/2026",
+  "07/09/2026", "12/10/2026", "02/11/2026", "15/11/2026", "20/11/2026", "25/12/2026"
 ];
 
-// Transforma "dd/mm/aaaa" num objeto Date de verdade
 function paraData(dataTexto) {
   const [dia, mes, ano] = dataTexto.split("/").map(Number);
   return new Date(ano, mes - 1, dia);
 }
 
-// Transforma um objeto Date de volta pra "dd/mm/aaaa"
 function paraTexto(data) {
   return String(data.getDate()).padStart(2, "0") + "/" +
-         String(data.getMonth() + 1).padStart(2, "0") + "/" +
-         data.getFullYear();
+         String(data.getMonth() + 1).padStart(2, "0") + "/" + data.getFullYear();
 }
 
-// NOVO: pra cada feriado que cai numa terça-feira (getDay() === 2),
-// adiciona a segunda-feira anterior numa lista extra de dias bloqueados
 const SEGUNDAS_APOS_FERIADO_TERCA = FERIADOS
   .map(paraData)
-  .filter(function (data) { return data.getDay() === 2; })
-  .map(function (data) {
+  .filter((data) => data.getDay() === 2)
+  .map((data) => {
     const segunda = new Date(data);
     segunda.setDate(segunda.getDate() - 1);
     return paraTexto(segunda);
   });
 
+// Ex: { "09/09/2026": [{horario:"13h-14h", tabuleiro:"1"}, {horario:"13h-14h", tabuleiro:"2"}] }
 let reservasPorDia = {};
 
 async function carregarReservas() {
@@ -57,11 +46,14 @@ async function carregarReservas() {
   reservasPorDia = {};
   resultado.forEach((docSnap) => {
     const dados = docSnap.data();
-    if (!reservasPorDia[dados.dia]) {
-      reservasPorDia[dados.dia] = [];
-    }
-    reservasPorDia[dados.dia].push(dados.horario);
+    if (!reservasPorDia[dados.dia]) reservasPorDia[dados.dia] = [];
+    reservasPorDia[dados.dia].push({ horario: dados.horario, tabuleiro: dados.tabuleiro || null });
   });
+}
+
+function contarReservas(dia, horario) {
+  const lista = reservasPorDia[dia] || [];
+  return lista.filter((r) => r.horario === horario).length;
 }
 
 function montarCalendario(mesReferencia = new Date()) {
@@ -86,7 +78,7 @@ function montarCalendario(mesReferencia = new Date()) {
   const diasSemana = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
   const linhaDias = document.createElement("div");
   linhaDias.className = "calendario-dias-semana";
-  diasSemana.forEach(function (dia) {
+  diasSemana.forEach((dia) => {
     const span = document.createElement("span");
     span.textContent = dia;
     linhaDias.appendChild(span);
@@ -124,22 +116,19 @@ function montarCalendario(mesReferencia = new Date()) {
     const jaPassou = dataDoDia < hoje;
     const passouDoLimite = dataDoDia > limite;
     const ehFeriado = FERIADOS.includes(dataFormatada);
-    const ehSegundaAposFeriadoTerca = SEGUNDAS_APOS_FERIADO_TERCA.includes(dataFormatada); // NOVO
+    const ehSegundaAposFeriadoTerca = SEGUNDAS_APOS_FERIADO_TERCA.includes(dataFormatada);
 
-    const horariosDoDia = reservasPorDia[dataFormatada] || [];
-    const diaCompleto = horariosDoDia.length >= TODOS_HORARIOS.length;
+    // Só fica "completo" se TODOS os horários bateram a capacidade máxima
+    const diaCompleto = TODOS_HORARIOS.every((h) => contarReservas(dataFormatada, h) >= CAPACIDADE);
 
-    if (!ehDiaUtil || jaPassou || passouDoLimite || diaCompleto || ehFeriado || ehSegundaAposFeriadoTerca) {
+    if (!ehDiaUtil || jaPassou || passouDoLimite || ehFeriado || ehSegundaAposFeriadoTerca || diaCompleto) {
       celula.disabled = true;
       celula.classList.add("dia-desabilitado");
     } else {
-      celula.addEventListener("click", function () {
-        document.querySelectorAll(".dia-selecionado").forEach(function (el) {
-          el.classList.remove("dia-selecionado");
-        });
+      celula.addEventListener("click", () => {
+        document.querySelectorAll(".dia-selecionado").forEach((el) => el.classList.remove("dia-selecionado"));
         celula.classList.add("dia-selecionado");
         document.getElementById("data-selecionada").value = dataFormatada;
-
         atualizarHorariosDisponiveis(dataFormatada);
       });
     }
@@ -149,7 +138,7 @@ function montarCalendario(mesReferencia = new Date()) {
 
   container.appendChild(grade);
 
-  document.getElementById("mes-anterior").addEventListener("click", function () {
+  document.getElementById("mes-anterior").addEventListener("click", () => {
     montarCalendario(new Date(ano, mes - 1, 1));
   });
 
@@ -159,30 +148,52 @@ function montarCalendario(mesReferencia = new Date()) {
     btnSeguinte.disabled = true;
     btnSeguinte.classList.add("dia-desabilitado");
   } else {
-    btnSeguinte.addEventListener("click", function () {
+    btnSeguinte.addEventListener("click", () => {
       montarCalendario(new Date(ano, mes + 1, 1));
     });
   }
 }
 
 function atualizarHorariosDisponiveis(dataFormatada) {
-  const horariosOcupados = reservasPorDia[dataFormatada] || [];
-
-  Array.from(selectHorario.options).forEach(function (opcao) {
-    opcao.disabled = horariosOcupados.includes(opcao.value || opcao.textContent);
+  Array.from(selectHorario.options).forEach((opcao) => {
+    const horario = opcao.value || opcao.textContent;
+    opcao.disabled = contarReservas(dataFormatada, horario) >= CAPACIDADE;
   });
 
   const selecionadaOcupada = selectHorario.selectedOptions[0] && selectHorario.selectedOptions[0].disabled;
   if (selecionadaOcupada) {
-    const primeiraLivre = Array.from(selectHorario.options).find(function (o) {
-      return !o.disabled;
-    });
-    if (primeiraLivre) {
-      selectHorario.value = primeiraLivre.value || primeiraLivre.textContent;
-    }
+    const primeiraLivre = Array.from(selectHorario.options).find((o) => !o.disabled);
+    if (primeiraLivre) selectHorario.value = primeiraLivre.value || primeiraLivre.textContent;
+  }
+
+  if (selectTabuleiro) {
+    atualizarTabuleirosDisponiveis(dataFormatada, selectHorario.value);
   }
 }
 
-carregarReservas().then(function () {
+// Só roda no xadrez: desabilita os tabuleiros já ocupados naquele dia+horário
+function atualizarTabuleirosDisponiveis(dataFormatada, horario) {
+  const lista = reservasPorDia[dataFormatada] || [];
+  const tabuleirosOcupados = lista.filter((r) => r.horario === horario).map((r) => r.tabuleiro);
+
+  Array.from(selectTabuleiro.options).forEach((opcao) => {
+    opcao.disabled = tabuleirosOcupados.includes(opcao.value);
+  });
+
+  const selecionadoOcupado = selectTabuleiro.selectedOptions[0] && selectTabuleiro.selectedOptions[0].disabled;
+  if (selecionadoOcupado) {
+    const primeiroLivre = Array.from(selectTabuleiro.options).find((o) => !o.disabled);
+    if (primeiroLivre) selectTabuleiro.value = primeiroLivre.value;
+  }
+}
+
+if (selectTabuleiro) {
+  selectHorario.addEventListener("change", () => {
+    const dia = document.getElementById("data-selecionada").value;
+    if (dia) atualizarTabuleirosDisponiveis(dia, selectHorario.value);
+  });
+}
+
+carregarReservas().then(() => {
   montarCalendario();
 });
