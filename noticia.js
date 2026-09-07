@@ -22,21 +22,20 @@ async function carregarNoticia() {
 
   const noticia = snap.data();
 
-  // O campo "conteudo" já vem pronto (texto + imagens + vídeos misturados),
-  // então só precisamos inserir ele como HTML de verdade
- let infoAutoria = `<p class="info-autoria">Postado em: ${formatarData(noticia.criadoEm)}${noticia.autorCriacao ? " por " + noticia.autorCriacao : ""}</p>`;
+  let infoAutoria = `<p class="info-autoria">Postado em: ${formatarData(noticia.criadoEm)}${noticia.autorCriacao ? " por " + noticia.autorCriacao : ""}</p>`;
 
-if (noticia.atualizadoEm) {
-  infoAutoria += `<p class="info-autoria">Atualizado em: ${formatarData(noticia.atualizadoEm)}${noticia.autorAtualizacao ? " por " + noticia.autorAtualizacao : ""}</p>`;
+  if (noticia.atualizadoEm) {
+    infoAutoria += `<p class="info-autoria">Atualizado em: ${formatarData(noticia.atualizadoEm)}${noticia.autorAtualizacao ? " por " + noticia.autorAtualizacao : ""}</p>`;
+  }
+
+  container.innerHTML = `
+    <h2>${noticia.titulo}</h2>
+    ${infoAutoria}
+    <img src="${noticia.capa}" alt="${noticia.titulo}" class="noticia-midia">
+    <p class="resumo-destaque">${noticia.resumo}</p>
+    <div class="conteudo-rico">${noticia.conteudo}</div>
+  `;
 }
-
-container.innerHTML = `
-  <h2>${noticia.titulo}</h2>
-  ${infoAutoria}
-  <img src="${noticia.capa}" alt="${noticia.titulo}" class="noticia-midia">
-  <p class="resumo-destaque">${noticia.resumo}</p>
-  <div class="conteudo-rico">${noticia.conteudo}</div>
-`;
 
 function formatarData(timestamp) {
   if (!timestamp) return "";
