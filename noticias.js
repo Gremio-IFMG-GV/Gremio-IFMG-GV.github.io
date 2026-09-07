@@ -8,7 +8,11 @@ const campoDataAte = document.getElementById("filtro-data-ate");
 const campoOrdem = document.getElementById("filtro-ordem");
 const btnLimpar = document.getElementById("btn-limpar-filtros");
 
-let todasAsNoticias = []; // guarda tudo, buscado uma vez só
+let todasAsNoticias = [];
+
+function normalizar(texto) {
+  return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
 
 async function carregarTodas() {
   lista.innerHTML = "Carregando notícias...";
@@ -23,19 +27,16 @@ async function carregarTodas() {
 
   aplicarFiltros();
 }
-// Remove acentos pra comparação (ex: "notícia" e "noticia" batem igual)
-function normalizar(texto) {
-  return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-}
+
 function aplicarFiltros() {
   const textoBusca = normalizar(campoBusca.value.trim());
   const dataDe = campoDataDe.value ? new Date(campoDataDe.value + "T00:00:00") : null;
   const dataAte = campoDataAte.value ? new Date(campoDataAte.value + "T23:59:59") : null;
 
   let filtradas = todasAsNoticias.filter((noticia) => {
-   const bateBusca = !textoBusca ||
-  normalizar(noticia.titulo).includes(textoBusca) ||
-  normalizar(noticia.resumo).includes(textoBusca);
+    const bateBusca = !textoBusca ||
+      normalizar(noticia.titulo).includes(textoBusca) ||
+      normalizar(noticia.resumo).includes(textoBusca);
 
     const dataNoticia = noticia.criadoEm ? noticia.criadoEm.toDate() : null;
     const bateDataDe = !dataDe || (dataNoticia && dataNoticia >= dataDe);
@@ -80,7 +81,6 @@ function formatarData(timestamp) {
   return data.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
 }
 
-// Refiltra a cada letra digitada ou mudança de filtro
 campoBusca.addEventListener("input", aplicarFiltros);
 campoDataDe.addEventListener("change", aplicarFiltros);
 campoDataAte.addEventListener("change", aplicarFiltros);
@@ -91,11 +91,12 @@ btnLimpar.addEventListener("click", () => {
   campoDataDe.value = "";
   campoDataAte.value = "";
   campoOrdem.value = "recentes";
-  document.getElementById("btn-toggle-filtros").addEventListener("click", () => {
+  aplicarFiltros();
+});
+
+document.getElementById("btn-toggle-filtros").addEventListener("click", () => {
   const painel = document.getElementById("painel-filtros");
   painel.style.display = painel.style.display === "none" ? "flex" : "none";
-});
-  aplicarFiltros();
 });
 
 carregarTodas();
